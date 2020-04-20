@@ -1,0 +1,8 @@
+#latitude, #longitude{
+    display: none;
+}
+
+#myMap{
+    height: 300px;
+    width: 400px;
+}
