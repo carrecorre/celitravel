@@ -1,8 +1,12 @@
-#latitude, #longitude{
+.hidden{
     display: none;
 }
 
 #myMap{
     height: 300px;
-    width: 400px;
+    width: 100%;
+}
+
+#dropdown01{
+    padding-right: 5vw;
 }

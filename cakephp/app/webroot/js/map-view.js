@@ -17,7 +17,6 @@ myMap.doubleClickZoom.disable();
 
 myMap.on('dblclick', e => {
     let position = myMap.mouseEventToLatLng(e.originalEvent);
-    console.log(position);
 });
 
 

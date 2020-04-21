@@ -15,6 +15,23 @@ class Restaurant extends AppModel {
  */
 	public $displayField = 'name';
 
+	public $actsAs = array(
+		'Upload.Upload' => array(
+			'url_cover' => array(
+				'fields' => array(
+					'dir' => '../Files/restaurants/covers'
+				),
+				'thumbnailMethod' => 'php',
+				'thumbnailSizes' => array(
+					'vga' => '640x480',
+					'thumb' => '150x150'
+				),
+				'deleteOnUpdate' => true,
+				'deleteFolderOnDelete' => false
+			)
+		)
+	);
+
 /**
  * Validation rules
  *

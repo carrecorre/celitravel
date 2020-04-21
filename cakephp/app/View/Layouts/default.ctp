@@ -20,12 +20,16 @@
 	<?php echo $this->Html->charset(); ?>
 		
 	<title>
+		CeliTravel <?php if(isset($restaurant)){
+				echo ' | '.$restaurant['Restaurant']['name'];
+		};
+			?>
 	</title>
 	
 	<?php
 		echo $this->Html->meta('icon');
 
-		echo $this->Html->css(array('style.css','bootstrap.min','bootstrap-grid.min','jumbotron'));
+		echo $this->Html->css(array('bootstrap.min','bootstrap-grid.min','jumbotron','style.css'));
 		echo $this->Html->script(array('jquery','bootstrap.min','bootstrap.bundle.min'));
 
 		echo $this->fetch('meta');

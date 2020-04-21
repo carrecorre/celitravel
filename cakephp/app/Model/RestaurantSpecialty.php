@@ -36,6 +36,25 @@ class RestaurantSpecialty extends AppModel {
 		)
 	);
 
+	public function addWithSpecialtyIdAndRestaurantId($specialty_id, $restaurant_id) {
+
+			$this->create();
+			$restaurantSpecialty['specialty_id'] = $specialty_id;
+			$restaurantSpecialty['restaurant_id'] = $restaurant_id;
+			$this->save($restaurantSpecialty);
+		
+	}
+
+	public function deleteRestaurantsSpecialtyByRestaurantId($restaurant_id){
+
+		$restaurantSpecialties = $this->findAllByRestaurantId($restaurant_id);
+		
+		foreach($restaurantSpecialties as $restaurantSpecialty){
+			$this->delete($restaurantSpecialty['RestaurantSpecialty']['id']);
+		}
+
+	}
+
 	public function getSpecialtiesIdsByRestaurantId($id = null){
 
         $restaurantSpecialties = $this->findAllByRestaurantId($id);

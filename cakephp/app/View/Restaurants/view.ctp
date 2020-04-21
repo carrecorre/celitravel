@@ -60,8 +60,8 @@ echo $this->Html->script('map-view');
 			<?php echo $restaurant['Province']['name']; ?>
 			<?php echo '('.$restaurant['Province']['community'].')'; ?>
 		<p>
-		<p id="latitude"><?php echo $restaurant['Restaurant']['latitude']; ?> </p>
-		<p id="longitude"><?php echo $restaurant['Restaurant']['longitude']; ?> </p>
+		<p id="latitude" class="hidden"><?php echo $restaurant['Restaurant']['latitude']; ?> </p>
+		<p id="longitude" class="hidden"><?php echo $restaurant['Restaurant']['longitude']; ?> </p>
 		
 
 <div id="myMap"></div>

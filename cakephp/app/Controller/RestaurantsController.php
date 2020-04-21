@@ -17,7 +17,7 @@ public $components = array('RequestHandler', 'Session');
 public $helpers = array('Html', 'Form', 'Time', 'Js');
 
 public $paginate = array(
-	'limit' => 3,
+	'limit' => 10,
 	'order' => array(
 		'Restaurant.id' => 'asc'
 	)
@@ -38,7 +38,7 @@ public $paginate = array(
  */
 	public function index() {
 		$this->Restaurant->recursive = 0;
-		$this->paginate['Restaurant']['limit'] = 3;
+		$this->paginate['Restaurant']['limit'] = 10;
 		$this->paginate['Restaurant']['order'] = array('Restaurant.id' => 'asc');
 		//$this->paginate['User']['conditions'] => array('User.id' => '');
 		$this->set('restaurants', $this->paginate());
@@ -78,18 +78,35 @@ public $paginate = array(
  *
  * @return void
  */
-	public function add() {
+	public function add() { 
+		
 		if ($this->request->is('post')) {
 			$this->Restaurant->create();
+
 			if ($this->Restaurant->save($this->request->data)) {
+
+
+				$id = $this->Restaurant->getLastInsertID();
+
+				foreach($this->request->data['RestaurantSpecialty']['specialty_id'] as $specialty){
+					$this->RestaurantSpecialty->addWithSpecialtyIdAndRestaurantId($specialty, $id);
+				}
+
 				$this->Flash->success(__('The restaurant has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Flash->error(__('The restaurant could not be saved. Please, try again.'));
 			}
 		}
+		
 		$provinces = $this->Restaurant->Province->find('list');
-		$this->set(compact('provinces'));
+		$specialties = $this->Specialty->find('list');
+		$this->set(
+			array(
+				'provinces' => $provinces,
+				'specialties' => $specialties
+			)
+			);
 	}
 
 /**
@@ -105,6 +122,13 @@ public $paginate = array(
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Restaurant->save($this->request->data)) {
+
+				$this->RestaurantSpecialty->deleteRestaurantsSpecialtyByRestaurantId($id);
+
+				foreach($this->request->data['RestaurantSpecialty']['specialty_id'] as $specialty){
+					$this->RestaurantSpecialty->addWithSpecialtyIdAndRestaurantId($specialty, $id);
+				}
+
 				$this->Flash->success(__('The restaurant has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
@@ -115,7 +139,17 @@ public $paginate = array(
 			$this->request->data = $this->Restaurant->find('first', $options);
 		}
 		$provinces = $this->Restaurant->Province->find('list');
-		$this->set(compact('provinces'));
+		$specialties = $this->Specialty->find('list');
+		$restaurant = $this->Restaurant->findById($id);
+		$restaurantSpecialties = $this->RestaurantSpecialty->getSpecialtiesIdsByRestaurantId($id);
+        $this->set(
+                array(
+                    'provinces' => $provinces,
+					'specialties' => $specialties,
+					'restaurant' => $restaurant,
+                    'restaurantSpecialties' => $restaurantSpecialties
+                )
+                );
 	}
 
 /**
@@ -129,7 +163,10 @@ public $paginate = array(
 		if (!$this->Restaurant->exists($id)) {
 			throw new NotFoundException(__('Invalid restaurant'));
 		}
+
 		$this->request->allowMethod('post', 'delete');
+		
+		$this->RestaurantSpecialty->deleteRestaurantsSpecialtyByRestaurantId($id);
 		if ($this->Restaurant->delete($id)) {
 			$this->Flash->success(__('The restaurant has been deleted.'));
 		} else {
