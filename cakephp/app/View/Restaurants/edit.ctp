@@ -7,15 +7,16 @@ echo $this->Html->script('lib/select2-4.0.0/dist/js/select2.full.min.js', array(
 echo $this->Html->css('../js/lib/select2-4.0.0/dist/css/select2.min.css', array('block' => 'script'));
 
 ?>
-<?php echo $this->Form->create('Restaurant'); ?>
-<fieldset>
-		<legend><h1><?php echo $restaurant['Restaurant']['name'] ?></h1></legend>		
-<div class="row">	
+<?php echo $this->Form->create('Restaurant', array('type' => 'file', 'novalidate' => 'novalidate')); ?>
 
+
+<fieldset>
+		<legend><?php echo __('Editar restaurante'); ?></legend>		
+<div class="row">	
 	<div id="score"  class="col-md-3">
-		<h2>Datos del restaurante</h2>
+		<h2>Datos</h2>
 		<?php
-		echo $this->Form->hidden('id');
+			echo $this->Form->hidden('id');
 			echo $this->Form->input('name',
 				array(
 					'label' => ('Nombre'),
@@ -24,16 +25,44 @@ echo $this->Html->css('../js/lib/select2-4.0.0/dist/css/select2.min.css', array(
 			);
 			echo $this->Form->input('address',
 			array(
-				'label' =>'Especialidades',
+				'label' =>'Dirección',
 				'type' => 'text'
 				)
 			);
-			echo $this->Form->input('postal_code');
-			echo $this->Form->input('phone');
-			echo $this->Form->input('email');
-			echo $this->Form->input('web');
-			echo $this->Form->input('province_id');
-			echo $this->Form->input('town');
+			echo $this->Form->input('postal_code',
+			array(
+				'label' =>'Código postal',
+				'type' => 'text'
+				)
+			);
+			echo $this->Form->input('phone',
+			array(
+				'label' =>'Teléfono',
+				'type' => 'text'
+				));
+			echo $this->Form->input('email',
+			array(
+				'label' =>'Email',
+				'type' => 'text'
+				)
+			);
+			echo $this->Form->input('web',
+			array(
+				'label' =>'Web',
+				'type' => 'text'
+				)
+			);
+			echo $this->Form->input('province_id',array(
+				'label' =>'Provincia',
+				'type' => 'select',
+				'empty' => true,
+			));
+			echo $this->Form->input('town',
+			array(
+				'label' =>'Población',
+				'type' => 'text'
+				)
+			);
 			echo $this->Form->input('RestaurantSpecialty.specialty_id',
 		array(
 			'label' =>'Especialidades',
@@ -45,6 +74,23 @@ echo $this->Html->css('../js/lib/select2-4.0.0/dist/css/select2.min.css', array(
 			'empty' => true,
 		)
 		);
+				echo $this->Html->image(
+					'../files/restaurant/foto/'.$restaurant['Restaurant']['foto_dir'].'/'.$restaurant['Restaurant']['foto'],
+					array(
+						'class' => 'thumbnail'
+						)
+					);
+				echo $this->Form->input('foto',
+					array(
+						'type'=> 'file',
+						'label' => 'Foto de portada'
+					)	
+				);
+				echo $this->Form->input('foto_dir', 
+					array(
+						'type'=> 'hidden',
+					)
+				);
 		?>
 	</div>
 	<div id="timetable"  class="col-md-3">
@@ -99,13 +145,31 @@ echo $this->Html->css('../js/lib/select2-4.0.0/dist/css/select2.min.css', array(
 				?>
 			</div>
 	</div>
-	<div class="col-md-6">
+	<div id="location" class="col-md-6">
 	<h2>Localización</h2>
-	<div id="myMap"></div>
+	
+	<div id="myMap"  class="map-edit"></div>
+	<?php
+	echo $this->Form->input('latitude',
+			array(
+				'label' =>'Latitud',
+				'type' => 'text',
+				'readonly' => 'readonly'
+			)
+			);
+			echo $this->Form->input('longitude',
+			array(
+				'label' =>'Longitud',
+				'type' => 'text',
+				'readonly' => 'readonly'
+				)
+			);
+
+			?>
 	</div>
 
 	
-<?php echo $this->Form->end(__('Submit')); ?>
+<?php echo $this->Form->end(__('Guardar')); ?>
 </div>
 </fieldset>
 

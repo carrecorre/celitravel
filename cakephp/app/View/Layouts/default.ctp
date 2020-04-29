@@ -29,13 +29,18 @@
 	<?php
 		echo $this->Html->meta('icon');
 
-		echo $this->Html->css(array('bootstrap.min','bootstrap-grid.min','jumbotron','style.css'));
-		echo $this->Html->script(array('jquery','bootstrap.min','bootstrap.bundle.min'));
+		echo $this->Html->css(array('bootstrap.min','bootstrap-grid.min','jumbotron','style.css','jquery-ui.min'));
+		echo $this->Html->script(array('jquery','bootstrap.min','bootstrap.bundle.min','jquery-ui.min','search'));
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
+	<script type="text/javascript">
+		//$("#foto").fileinput();
+		
+		var basePath = "<?php echo Router::url('/'); ?>"
+	</script>
 </head>
 <body>
 

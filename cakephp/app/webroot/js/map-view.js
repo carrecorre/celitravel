@@ -13,7 +13,7 @@ myMap.doubleClickZoom.disable();
         maxZoom: 50,
     }).addTo(myMap);
 
-    let marker = L.marker([lat, long]).addTo(myMap); 
+    let marker = L.marker([lat, long]).addTo(myMap);
 
 myMap.on('dblclick', e => {
     let position = myMap.mouseEventToLatLng(e.originalEvent);

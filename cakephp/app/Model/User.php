@@ -14,6 +14,19 @@ class User extends AppModel {
  */
 	public $displayField = 'name';
 
+	public $actsAs = array(
+		'Upload.Upload' => array(
+			'foto' => array(
+				'fields' => array(
+					'dir' => 'foto_dir'
+				),
+				'thumbnailMethod' => 'php',
+				'deleteOnUpdate' => true,
+				'deleteFolderOnDelete' => true
+			)
+		)
+	);
+
 /**
  * Validation rules
  *
@@ -60,6 +73,34 @@ class User extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		'foto' => array(
+			'uploadError' => array(
+				'rule' => 'uploadError',
+				'message' => 'Error al subir la imagen',
+				'on' => 'create'
+			),
+			'isUnderPhpSizeLimit' => array(
+				'rule' => 'isUnderPhpSizeLimit',
+				'message' => 'La imagen excede el límite de tamaño',
+			),
+			'isValidMimeType' => array(
+				'rule' => array('isValidMimeType', array('image/jpeg', 'image/png'), false),
+				'message' => 'La imagen no es formato jpg o png',
+			),
+			'isBelowMaxSize' => array(
+				'rule' => array('isBelowMaxSize', 10485760),
+				'message' => 'El tamaño de la imagen es demasiado grande',
+			),
+			'isValidExtension' => array(
+				'rule' => array('isValidExtension', array('jpg', 'png'), false),
+				'message' => 'La imagen no es formato jpg o png',
+			),
+			'checkUniqueName' => array(
+				'rule' => array('checkUniqueName'),
+				'message' => 'La imagen con ese nombre ya se encuentra registrada',
+				'on' => 'update'
+			),
+		),
 		'password' => array(
 			'alphaNumeric' => array(
 				'rule' => array('alphaNumeric'),
@@ -94,5 +135,20 @@ class User extends AppModel {
 			'counterQuery' => ''
 		)
 	);
+
+	function checkUniqueName($data){
+
+		$isUnique = $this->find('first',
+								array(
+									'fields' => array('User.foto'),
+									'conditions' =>	array('User.foto' => $data['foto'])
+									)
+								);
+		if(!empty($isUnique)){
+			return false;
+		}else{
+			return true;
+		}	
+	}
 
 }

@@ -1,31 +1,34 @@
 <div class="page-header">
-	<h2><?php echo __('Restaurants'); ?></h2>
+	<h2><?php echo __('Restaurantes'); ?></h2>
 
 	<?php
     echo $this->Html->link('Crear restaurante', 
                             array(
                                 'controller' => 'restaurants',
                                 'action' => 'add'
-                                )
+							),
+							array('class'=> 'btn btn-secondary')
                             );
 ?>
 
 </div>
+
+<hr>
 
 	<div class="col-md-12">
 
 	<table class="table table-striped">
 	<thead>
 	<tr>
-			<th><?php echo $this->Paginator->sort('Dd'); ?></th>
+			<th><?php echo $this->Paginator->sort('Id'); ?></th>
 			<th><?php echo $this->Paginator->sort('Nombre'); ?></th>
 			<th><?php echo $this->Paginator->sort('Dirección'); ?></th>
-			<th><?php echo $this->Paginator->sort('province_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('town'); ?></th>
-			<th><?php echo $this->Paginator->sort('teléfono'); ?></th>
-			<th><?php echo $this->Paginator->sort('email'); ?></th>
-			<th><?php echo $this->Paginator->sort('web'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+			<th><?php echo $this->Paginator->sort('Provincia'); ?></th>
+			<th><?php echo $this->Paginator->sort('Población'); ?></th>
+			<th><?php echo $this->Paginator->sort('Teléfono'); ?></th>
+			<th><?php echo $this->Paginator->sort('Email'); ?></th>
+			<th><?php echo $this->Paginator->sort('Web'); ?></th>
+			<th class="actions"><?php echo __('Acciones'); ?></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -40,27 +43,27 @@
 		<td><?php echo h($restaurant['Restaurant']['email']); ?>&nbsp;</td>
 		<td><?php echo h($restaurant['Restaurant']['web']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), 
+			<?php echo $this->Html->link(__('Ver'), 
 									array(
 											'action' => 'view', 
 											$restaurant['Restaurant']['id']),
 									array('class'=> 'btn btn-secondary')
 									); ?>
-			<?php echo $this->Html->link(__('Edit'), 
+			<?php echo $this->Html->link(__('Editar'), 
 									array(
 										'action' => 'edit', 
 										$restaurant['Restaurant']['id']),
 									array('class'=> 'btn btn-secondary')
 									); ?>
-			<?php echo $this->Form->postLink(__('Delete'), 
+			<?php echo $this->Form->postLink(__('Eliminar'), 
 									array(
 										'action' => 'delete', 
 										$restaurant['Restaurant']['id']), 
 									array('class'=> 'btn btn-secondary'),
-									array('confirm' => __('Are you sure you want to delete # %s?', $restaurant['Restaurant']['id']),
-
+									array('confirm' => '¿Estás seguro que quieres eliminar el restaurante?',
 										)
-										); ?>
+									);
+			?>
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -72,13 +75,13 @@
 	<p>
 	<?php
 	echo $this->Paginator->counter(array(
-		'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+		'format' => __('Página {:page} de {:pages}, {:current} registros de {:count} totales')
 	));
 	?>	</p>
 	<div class="paging">
 	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled btn btn-secondary'));
+		echo $this->Paginator->prev('< ' . __('Anterior'), array(), null, array('class' => 'prev disabled btn btn-secondary'));
 		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled btn btn-secondary'));
+		echo $this->Paginator->next(__('Siguiente') . ' >', array(), null, array('class' => 'next disabled btn btn-secondary'));
 	?>
 	</div>

@@ -92,4 +92,22 @@ class Review extends AppModel {
             )
         );
     }
+
+    public function deleteReviewsByRestaurantId($restaurant_id){
+
+        $reviews = $this->findAllByRestaurantId($restaurant_id);
+		
+		foreach($reviews as $review){
+			$this->delete($review['Review']['id']);
+		}
+    }
+
+    public function deleteReviewsByUserId($user_id){
+
+        $reviews = $this->findAllByUserId($user_id);
+		
+		foreach($reviews as $review){
+			$this->delete($review['Review']['id']);
+		}
+    }
 }

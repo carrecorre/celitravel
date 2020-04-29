@@ -14,8 +14,6 @@ myMap.doubleClickZoom.disable();
         maxZoom: 50,
     }).addTo(myMap);
 
-
-
     var PeticionAjax  = (function(){
 
         var get = function(url, data){

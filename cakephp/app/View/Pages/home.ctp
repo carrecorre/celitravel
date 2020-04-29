@@ -7,12 +7,42 @@
   
   <div class="row">
   <div class="col-md-6 ">
-    <form class="my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Introduce un lugar" aria-label="Search">
-  </div>
-  <div class="col-md-2">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-    </form>
+  <?php
+        echo $this->Form->create('Restaurant', array(
+                                                'type' => 'GET',
+                                                'class' => 'my-2 my-lg-0',
+                                                'id' => 'form-search',
+                                                'url' => array(
+                                                    'controller' => 'restaurants',
+                                                    'action' => 'search'
+                                                    )
+                                                  )
+                                                );
+    ?>
+  <div class="form-group">
+
+    <?php
+        echo $this->Form->input('search', array(
+                                            'label' => false,
+                                            'div' => false,
+                                            'id' => 'input-search',
+                                            'class' => 'form-control mr-sm-2',
+                                            'autocomplete' => 'off',
+                                            'placeholder' => 'CeliTravel te lo busca'
+                                             )
+                                          );
+      ?>
+</div>
+      <?php  
+        echo $this->Form->button('Buscar', array(
+                                            'div' => false,
+                                            'class' => 'btn btn-outline-success my-2 my-sm-0'
+                                             )
+                                          );     
+                                          
+        echo $this->Form->end();
+
+      ?>
     
   </div>
   </div>

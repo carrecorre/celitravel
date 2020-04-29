@@ -1,24 +1,50 @@
 <div class="users form">
-<?php echo $this->Form->create('User'); ?>
+<?php echo $this->Form->create('User', array('type' => 'file', 'novalidate' => 'novalidate')); ?>
 	<fieldset>
-		<legend><?php echo __('Add User'); ?></legend>
+		<legend class='row'><?php echo __('Añadir usuario'); ?></legend>
 	<?php
-		echo $this->Form->input('name');
-		echo $this->Form->input('surname');
-		echo $this->Form->input('email');
-		echo $this->Form->input('username');
-		echo $this->Form->input('password');
-		echo $this->Form->input('creation_date');
+		echo $this->Form->input('name',
+			array(
+				'label' => ('Nombre'),
+				'type' => 'text'
+				)		
+		);
+		echo $this->Form->input('surname',
+			array(
+				'label' => ('Apellido'),
+				'type' => 'text'
+				)		
+		);
+		echo $this->Form->input('email',
+			array(
+				'label' => ('Email'),
+				'type' => 'text'
+				)		
+		);
+		echo $this->Form->input('username',
+			array(
+				'label' => ('Nombre de usuario'),
+				'type' => 'text'
+				)		
+		);
+		echo $this->Form->input('password',
+			array(
+				'label' => ('Contraseña'),
+				'type' => 'password'
+				)		
+		);
+		echo $this->Form->input('foto',
+				array(
+					'type'=> 'file',
+					'label' => 'Foto de portada'
+				)	
+		);
+		echo $this->Form->input('foto_dir', 
+				array(
+					'type'=> 'hidden',
+				)
+		);
 	?>
 	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-
-		<li><?php echo $this->Html->link(__('List Users'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Reviews'), array('controller' => 'reviews', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Review'), array('controller' => 'reviews', 'action' => 'add')); ?> </li>
-	</ul>
+<?php echo $this->Form->end(__('Registrar')); ?>
 </div>

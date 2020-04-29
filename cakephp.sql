@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-04-2020 a las 18:41:14
+-- Tiempo de generación: 29-04-2020 a las 21:44:31
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -103,7 +103,8 @@ CREATE TABLE IF NOT EXISTS `restaurants` (
   `postal_code` varchar(10) DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `url_cover` varchar(255) DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL,
+  `foto_dir` varchar(255) DEFAULT NULL,
   `web` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `province_id` int(10) DEFAULT NULL,
   `town` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -123,15 +124,20 @@ CREATE TABLE IF NOT EXISTS `restaurants` (
   `sunday_close` time DEFAULT NULL,
   `latitude` decimal(30,20) DEFAULT NULL,
   `longitude` decimal(30,20) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `restaurants`
 --
 
-INSERT INTO `restaurants` (`id`, `name`, `address`, `postal_code`, `phone`, `email`, `url_cover`, `web`, `province_id`, `town`, `monday_open`, `monday_close`, `tuesday_open`, `tuesday_close`, `wednesday_open`, `wednesday_close`, `thursday_open`, `thursday_close`, `friday_open`, `friday_close`, `saturday_open`, `saturday_close`, `sunday_open`, `sunday_close`, `latitude`, `longitude`) VALUES
-(1, 'La taberna dve Los Serrano', 'C/ La paloma Torcaz', '23433', '943235689', 'taberna@mail.com', NULL, 'www.taberna.com', 10, 'Burgos', '12:00:00', '23:00:00', '12:00:00', '12:24:00', '12:00:00', '12:24:00', '12:24:00', '12:24:00', '12:24:00', '12:24:00', '12:24:00', '12:24:00', '12:24:00', '12:24:00', '40.00000000000000000000', '-4.00000000000000000000'),
-(2, 'Diverxoxdd', 'C/Desengaño 21', '23433', '947585623', 'diverxo@mail.com', NULL, 'www.diverxo.com', 32, 'Madrid', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '01:12:00', '13:24:00', '45.00000000000000000000', '-6.00000000000000000000');
+INSERT INTO `restaurants` (`id`, `name`, `address`, `postal_code`, `phone`, `email`, `foto`, `foto_dir`, `web`, `province_id`, `town`, `monday_open`, `monday_close`, `tuesday_open`, `tuesday_close`, `wednesday_open`, `wednesday_close`, `thursday_open`, `thursday_close`, `friday_open`, `friday_close`, `saturday_open`, `saturday_close`, `sunday_open`, `sunday_close`, `latitude`, `longitude`) VALUES
+(1, 'La taberna', 'C/ Vega 3', '09120', '947368974', 'taberna@gmail.com', 'rest1.jpg', '1', 'www.lataberna.com', 10, 'Villadiego', '08:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '02:00:00', '08:00:00', '02:00:00', '10:00:00', '22:00:00', '42.51594179550307000000', '-4.00890991268176040000'),
+(2, 'La Cueva', 'C/ Mayor 7', '09120', '947360017', 'cueva@gmail.com', 'rest2.jpg', '2', 'www.lacueva.es', 10, 'Villadiego', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '42.51483504558433400000', '-4.01126925043702400000'),
+(3, 'La Mafia', 'C/ Laín Calvo 50', '09003', '947264478', 'mafiaburgos@gmail.com', 'rest3.jpg', '3', 'www.lamafia.es', 10, 'Burgos', '12:00:00', '23:00:00', '12:00:00', '23:00:00', '12:00:00', '23:00:00', '12:00:00', '23:00:00', '12:00:00', '23:00:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '42.34316726876174600000', '-3.70097022019416460000'),
+(4, 'Hammbur', 'C/ San Lorenzo, 28', '09003', '947279941', 'hammmbur@gmail.com', 'rest4.jpg', '4', 'www.hammmbur.es', 10, 'Burgos', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '42.34211575014886400000', '-3.70141587560465900000'),
+(5, 'Villa Trajano', 'Av. Reyes Católicos, 8', '09004', '947264455', 'villatrajano@gmail.com', 'rest5.jpg', '5', 'www.villatrajano.es', 10, 'Burgos', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '42.34443327069305000000', '-3.69602492172215900000'),
+(6, 'Mesón Los Herreros', 'C/ San Lorenzo, 20', '09003', '947658947', 'losherreros@gmail.com', 'rest7.jpg', '6', 'ww.mesonlosherreros.com', 10, 'Burgos', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '42.34227910938769000000', '-3.70142137626071000000'),
+(7, 'Celicioso Retiro', 'C/ O''Donnell, 4', '28009', '918625489', 'celicioso@gmail.com', 'rest9.jpg', '7', 'www.celicioso.com', 31, 'Madrid', '09:00:00', '22:00:00', '09:00:00', '22:00:00', '09:00:00', '22:00:00', '09:00:00', '22:00:00', '09:00:00', '22:00:00', '09:00:00', '22:00:00', '09:00:00', '22:00:00', '40.42158960004404000000', '-3.67955699368863340000');
 
 -- --------------------------------------------------------
 
@@ -143,16 +149,27 @@ CREATE TABLE IF NOT EXISTS `restaurants_specialties` (
 `id` int(11) NOT NULL,
   `restaurant_id` int(11) DEFAULT NULL,
   `specialty_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `restaurants_specialties`
 --
 
 INSERT INTO `restaurants_specialties` (`id`, `restaurant_id`, `specialty_id`) VALUES
-(10, 1, 1),
-(11, 1, 2),
-(12, 1, 4);
+(1, 1, 1),
+(2, 1, 2),
+(3, 2, 5),
+(4, 3, 2),
+(5, 3, 3),
+(6, 3, 4),
+(7, 4, 4),
+(8, 4, 6),
+(9, 5, 2),
+(10, 5, 3),
+(11, 5, 4),
+(12, 6, 5),
+(13, 7, 3),
+(14, 7, 4);
 
 -- --------------------------------------------------------
 
@@ -169,15 +186,7 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   `restaurant_id` int(10) DEFAULT NULL,
   `user_id` int(10) DEFAULT NULL,
   `date` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `reviews`
---
-
-INSERT INTO `reviews` (`id`, `review`, `general_rate`, `gluten_knowledge`, `gluten_adaptation`, `restaurant_id`, `user_id`, `date`) VALUES
-(1, 'sdfsdfgsd', 4.00, 3.00, 2.00, 1, 6, '2020-04-19 21:50:19'),
-(2, 'sdfsdfgsd', 4.00, 3.00, 2.00, 1, 6, '2020-04-19 21:50:19');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -214,35 +223,25 @@ CREATE TABLE IF NOT EXISTS `users` (
 `id` int(10) NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `surname` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `role` int(10) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL,
+  `foto_dir` varchar(255) DEFAULT NULL,
   `creation_date` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `surname`, `email`, `username`, `password`, `creation_date`) VALUES
-(1, 'Ángel', 'Carretón', 'angelcarrod@gmail.com', 'angelcarrod', '12345', '2020-04-14 21:14:59'),
-(5, 'Jòge', 'López', 'jorge@gmail.com', 'jorge', '1234', '2020-04-14 21:15:56'),
-(6, 'Iñigo', 'Rodríguez', 'sergio@gmail.com', 'sergio', '1234', '2020-04-14 21:15:56'),
-(7, 'Andrea', 'Zaldúa', 'zaldugarci@gmail.com', 'andreazaldu', '1234', '2020-04-14 21:15:56'),
-(8, 'Miguel', 'Amo', 'miguelanimal@gmail.com', 'migui', '1234', '2020-04-14 21:15:56'),
-(9, 'Manuel', 'Garcia', 'manu@gmail.com', 'manue', '1234', '2020-04-14 21:15:56'),
-(10, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(11, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(12, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(13, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(14, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(15, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(16, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(17, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(18, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(19, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(20, 'José', 'Veleñ', NULL, NULL, '2233', '2020-04-19 17:59:26'),
-(21, 'Jose', 'Veles', NULL, NULL, '2233', '2020-04-19 17:59:26');
+INSERT INTO `users` (`id`, `name`, `surname`, `role`, `email`, `username`, `password`, `foto`, `foto_dir`, `creation_date`) VALUES
+(1, 'Ángel', 'Carretón', 1, 'angelcarrod@gmail.com', 'angelcarrod', '1234', 'user4.jpg', '1', '2020-04-28 21:08:22'),
+(2, 'Sergio', 'Rodríguez', 2, 'sergiorod@gmail.com', 'sergioSer', '12345', 'user1.jpg', '2', '2020-04-28 21:08:52'),
+(3, 'Andrea', 'Zaldua', 2, 'zaldu@gmail.com', 'zaldu', '111', 'user6.jpg', '3', '2020-04-28 21:09:25'),
+(4, 'Manuel', 'García', 2, 'mgf@gmail.com', 'manugf', '222', 'user2.jpg', '4', '2020-04-28 21:09:54'),
+(5, 'Miguel', 'Amo', 2, 'mag@mail.com', 'migui', 'migui123', 'user3.JPG', '5', '2020-04-28 21:10:31');
 
 --
 -- Índices para tablas volcadas
@@ -297,17 +296,17 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=53;
 -- AUTO_INCREMENT de la tabla `restaurants`
 --
 ALTER TABLE `restaurants`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `restaurants_specialties`
 --
 ALTER TABLE `restaurants_specialties`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT de la tabla `reviews`
 --
 ALTER TABLE `reviews`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `specialties`
 --
@@ -317,7 +316,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- Restricciones para tablas volcadas
 --

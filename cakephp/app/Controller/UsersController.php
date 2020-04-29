@@ -19,11 +19,19 @@ class UsersController extends AppController {
 	public $helpers = array('Html', 'Form', 'Time', 'Js');
 
 	public $paginate = array(
-		'limit' => 3,
+		'limit' => 10,
 		'order' => array(
 			'User.id' => 'asc'
 		)
 	);
+
+	var $uses = array(
+        'User',
+        'Specialty',
+        'Review',
+        'Restaurant',
+        'RestaurantSpecialty'
+    );
 
 /**
  * index method
@@ -32,7 +40,7 @@ class UsersController extends AppController {
  */
 	public function index() {
 		$this->User->recursive = 0;
-		$this->paginate['User']['limit'] = 3;
+		$this->paginate['User']['limit'] = 10;
 		$this->paginate['User']['order'] = array('User.id' => 'asc');
 		//$this->paginate['User']['conditions'] => array('User.id' => '');
 		$this->set('users', $this->paginate());
@@ -47,7 +55,7 @@ class UsersController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->User->exists($id)) {
-			throw new NotFoundException(__('Invalid user'));
+			throw new NotFoundException(__('Usuario no encontrado'));
 		}
 		$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
 		$this->set('user', $this->User->find('first', $options));
@@ -62,10 +70,10 @@ class UsersController extends AppController {
 		if ($this->request->is('post')) {
 			$this->User->create();
 			if ($this->User->save($this->request->data)) {
-				$this->Flash->success(__('The user has been saved.'));
+				$this->Flash->success(__('Usuario registrado correctamente.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('The user could not be saved. Please, try again.'));
+				$this->Flash->error(__('Error al registrar el usuario.'));
 			}
 		}
 	}
@@ -79,19 +87,25 @@ class UsersController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->User->exists($id)) {
-			throw new NotFoundException(__('Invalid user'));
+			throw new NotFoundException(__('Usuario no encontrado'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->User->save($this->request->data)) {
-				$this->Flash->success(__('The user has been saved.'));
+				$this->Flash->success(__('Usuario guardado correctamente.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('The user could not be saved. Please, try again.'));
+				$this->Flash->error(__('Error al guardar el usuario.'));
 			}
 		} else {
 			$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
 			$this->request->data = $this->User->find('first', $options);
 		}
+		$user = $this->User->findById($id);
+        $this->set(
+                array(
+					'user' => $user
+                )
+                );
 	}
 
 /**
@@ -103,13 +117,16 @@ class UsersController extends AppController {
  */
 	public function delete($id = null) {
 		if (!$this->User->exists($id)) {
-			throw new NotFoundException(__('Invalid user'));
+			throw new NotFoundException(__('Usuario no encontrado'));
 		}
 		$this->request->allowMethod('post', 'delete');
+
+		
+		$this->Review->deleteReviewsByUserId($id);
 		if ($this->User->delete($id)) {
-			$this->Flash->success(__('The user has been deleted.'));
+			$this->Flash->success(__('Usuario eliminado correctamente.'));
 		} else {
-			$this->Flash->error(__('The user could not be deleted. Please, try again.'));
+			$this->Flash->error(__('Error al eliminar el usuario.'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
