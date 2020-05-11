@@ -25,13 +25,12 @@
 		};
 			?>
 	</title>
-	
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 	<?php
 		echo $this->Html->meta('icon');
 
 		echo $this->Html->css(array('bootstrap.min','bootstrap-grid.min','jumbotron','style.css','jquery-ui.min'));
-		echo $this->Html->script(array('jquery','bootstrap.min','bootstrap.bundle.min','jquery-ui.min','search'));
-
+		echo $this->Html->script(array('jquery','bootstrap.min','bootstrap.bundle.min','jquery-ui.min','search','login'));
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
@@ -45,19 +44,21 @@
 <body>
 
 <?php echo $this->element('menu'); ?>
-
 <main role="main">
 
 
 
   <?php echo $this->Flash->render(); ?>
+  <?php echo $this->Session->flash(); ?>
+  <?php echo $this->Session->flash('auth'); ?>
 
 <?php echo $this->fetch('content'); ?>
 
+<?php echo $this->element('modalLogin'); ?>
 </main>
 
-<footer class="container">
-  <p>&copy; Company 2017-2019</p>
+<footer class="container footer">
+  <p> Ángel Carretón &copy;</p>
 </footer>
 </body>
 </html>

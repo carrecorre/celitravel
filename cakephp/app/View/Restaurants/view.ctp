@@ -2,11 +2,12 @@
 echo $this->Html->css(Configure::read('MAPS_API_CSS'));
 echo $this->Html->script(Configure::read('MAPS_API_JS'));
 echo $this->Html->script('map-view');
-
+echo $this->Html->script('review');
 ?>
 
 
-<h1><?php echo __($restaurant['Restaurant']['name']); ?></h1>
+<h1><?php
+echo __($restaurant['Restaurant']['name']); ?></h1>
 
 
 <div class="row">	
@@ -23,7 +24,10 @@ echo $this->Html->script('map-view');
 									'disabled' => 'disabled',
 									'value' => round($averages['general'])
 								);
-					echo $this->Form->radio('general_rate', $options, $attributes);
+					echo $this->Form->radio('general_rate', $options, $attributes,
+					array(
+						'class' => 'form-star'
+					  ));
 				?>
 			</p>
 			Conocimiento de la enfermedad:
@@ -116,7 +120,26 @@ echo $this->Html->script('map-view');
 
 <hr>
 
+<div id="reviews">
 <h2>Opiniones</h2>
+<div id="add-review">
+<?php 
+if(isset($current_user)){
+	echo $this->Html->link('Añadir comentario', 
+                                        array(
+                                            'controller'=>'reviews',
+                                            'action' => 'add'
+                                      ),
+                                          array(
+                                            'class' => 'btn ',
+                                            'data-toggle' => 'modal',
+                                            'data-target' => '#exampleModal'
+                                          )
+                                        ); 
+}
+                
+		  ?>
+		  </div>
 <?php if (!empty($restaurant['Review'])): ?>
 
 	<div id="reviews" class="row">
@@ -180,6 +203,7 @@ echo $this->Html->script('map-view');
 	
 	</div>  <!-- fin del row -->
 <?php endif; ?> 
+									</div>
 
 
-
+<?php echo $this->element('modalReview'); ?>

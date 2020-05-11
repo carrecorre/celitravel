@@ -35,7 +35,7 @@ class PagesController extends AppController {
  *
  * @var array
  */
-	public $uses = array();
+	public $uses = array('Restaurant','Review');
 
 /**
  * Displays a view
@@ -45,8 +45,23 @@ class PagesController extends AppController {
  * @throws NotFoundException When the view file could not be found
  *   or MissingViewException in debug mode.
  */
+
 	public function display() {
 		$path = func_get_args();
+
+		$userLocation = @unserialize (file_get_contents('http://ip-api.com/php/'));
+		if ($userLocation && $userLocation['status'] == 'success') {
+			$this->Session->write('userLocation',$userLocation);
+		}
+		$restaurants = $this->Restaurant->findBestGlutenKnowledgeRated(5);
+		foreach ($restaurants as $key => $restaurant){
+			$knowledge = $this->Review->getGlutenKnowledgeByRestaurantId($restaurant['Restaurant']['id']);
+			$restaurants[$key]['Restaurant']['gluten_knowledge'] = $knowledge[0]['average'];
+		}
+
+		$this->set(array(
+			'restaurants' => $restaurants,
+		));
 
 		$count = count($path);
 		if (!$count) {
@@ -76,5 +91,6 @@ class PagesController extends AppController {
 			}
 			throw new NotFoundException();
 		}
+		
 	}
 }

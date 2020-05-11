@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    
     $('#input-search').autocomplete({
         minLength: 2,
         select: function(event, ui){
@@ -13,6 +12,7 @@ $(document).ready(function(){
                 },
                 dataType: 'json',
                 success: function(data){
+                    console.log(request);
                     response($.map(data, function(el, index){
                         return {
                             value: el.Restaurant.name,
@@ -23,10 +23,40 @@ $(document).ready(function(){
                 }
             });
         }
-    }).data('ui-autocomplete')._renderItem = function(ul, item){
-        return $('<li></li>')
+    }).data('ui-autocomplete')._renderItem = function(ul, item){    
+        return $('<li class="list-group-item"></li>')
         .data('item.autocomplete', item)
         .append('<a>'+ item.name +' - '+item.address+'</a>')
+        .appendTo(ul)
+    };
+
+    $('#input-search-town').autocomplete({
+        minLength: 2,
+        select: function(event, ui){
+            $('#input-search-town').val(ui.item.label);
+        },
+        source: function(request, response){
+            $.ajax({
+                url: basePath + 'restaurants/searchtownjson',
+                data: {
+                    term: request.term
+                },
+                dataType: 'json',
+                success: function(data){
+                    console.log(request);
+                    response($.map(data, function(el, index){
+                        return {
+                            value: el.Restaurant.town,
+                            name: el.Restaurant.town,
+                        }
+                    }));
+                }
+            });
+        }
+    }).data('ui-autocomplete')._renderItem = function(ul, item){    
+        return $('<li class="list-group-item"></li>')
+        .data('item.autocomplete', item)
+        .append('<a>'+ item.name +'</a>')
         .appendTo(ul)
     };
 });

@@ -1,7 +1,129 @@
+body{
+  background-color: white;
+  background-image: url("../img/logotipo.png");
+  background-repeat: repeat;
+  background-position: center; /* Center the image */
+  background-size: 30vw; 
+  color: #343A40;
+}
+
+.navbar{
+  background-color: rgb(70, 67, 57);
+}
+
+h4, h3{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.container{
+  background-color: white;
+  border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(70, 67, 57);
+}
+
+.carousel-container{
+  width: 60vw;
+}
+.carousel{
+  padding-bottom: 10px;
+}
+
+a{
+  color: #F5CC1E;
+}
+
+
+/* modal login*/
+
+.user_card {
+  height: 400px;
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+  background: rgb(70, 67, 57);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+  color: #F5CC1E;
+
+}
+.brand_logo_container {
+  position: absolute;
+  height: 170px;
+  width: 170px;
+  top: -75px;
+  border-radius: 50%;
+  background: #F5CC1E;
+  padding: 10px;
+  text-align: center;
+}
+.brand_logo {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+.form_container {
+  margin-top: 100px;
+}
+.login_btn {
+  width: 100%;
+  background: #F5CC1E !important;
+  color: rgb(70, 67, 57) !important;
+}
+.login_btn:focus {
+  box-shadow: none !important;
+  outline: 0px !important;
+}
+.login_container {
+  padding: 0 2rem;
+}
+.input-group-text {
+  background: #F5CC1E !important;
+  color: white !important;
+  border: 0 !important;
+  border-radius: 0.25rem 0 0 0.25rem !important;
+}
+.input_user,
+.input_pass:focus {
+  box-shadow: none !important;
+  outline: 0px !important;
+}
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+  background-color: #c0392b !important;
+}
+
+
+
+
+footer{
+  background-color: #343A40;
+  color: #F5CC1E;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ 
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.elemento{
+  background-color: #F5CC1E;
+  border-radius: 4px;
+}
+
 .hidden{
     display: none;
 }
-
 .map-edit{
     height: 500px;
     width: 100%;
@@ -35,18 +157,29 @@
     border-radius: 50%;
     background-size: 100% auto;
 }
+.img-menu{
+  height: 50px;
+  width: 50px;
+  
+  /* los siguientes valores son independientes del tamaño del círculo */
+  background-repeat: no-repeat;
+  background-position: 50%;
+  border-radius: 50%;
+  background-size: 100% auto;
+}
 
-#form {
+/* FOrmulario de estrellas */
+.form-star {
     width: 250px;
     margin: 0 auto;
     height: 50px;
   }
   
-  #form p {
+  .form-star p {
     text-align: center;
   }
   
-  #form label {
+  .form-star label {
     font-size: 20px;
   }
   
@@ -54,17 +187,14 @@
     display: none;
   }
   
-  label {
-    color: grey;
-  }
-  
   .clasificacion {
+    color: grey;
     direction: rtl;
     unicode-bidi: bidi-override;
   }
-  
-  label:hover,
-  label:hover ~ label {
+
+  .clasify > label:hover,
+  .clasify > label:hover ~ label {
     color: orange;
   }
   
@@ -72,7 +202,73 @@
     color: orange;
   }
 
+  /**/
+
   .menu-logo{
     height: 50px
   }
-  
+
+  .home-logo{
+    width: 100%
+  }
+
+  /* carrusel */
+  .carousel-inner > .carousel-item > img {
+    border-radius: 4px;
+    height: 50vh;
+    width: 50vh;
+    
+  }
+  .carousel-caption{
+    border-radius: 4px;
+    background-color:rgba(31, 28, 28, 0.7);
+  }
+
+  /* barra de búsqueda */
+
+  .search{
+    padding-top: 60px;
+  }
+  .searchbar{
+    margin-bottom: auto;
+    margin-top: auto;
+    height: 60px;
+    background-color: rgb(70, 67, 57);
+    border-radius: 30px;
+    padding: 10px;
+    }
+
+    .search_input{
+    color: white;
+    border: 0;
+    outline: 0;
+    background: none;
+    caret-color:transparent;
+    line-height: 40px;
+    transition: width 0.4s linear;
+    padding: 0 10px;
+    width: 50vw;
+    caret-color:red;
+    }
+
+    .separator{
+      color: rgb(147, 154, 158);
+    }
+
+    .search_icon{
+    height: 40px;
+    width: 40px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color:white;
+    text-decoration:none;
+    background: white;
+    color: #e74c3c;
+    background-image: url("../img/logo-mini.png");
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size: 40px;
+    }

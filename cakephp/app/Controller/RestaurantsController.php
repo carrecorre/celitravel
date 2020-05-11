@@ -13,7 +13,7 @@ class RestaurantsController extends AppController {
  *
  * @var array
  */
-public $components = array('RequestHandler', 'Session');
+public $components = array('RequestHandler', 'Paginator');
 public $helpers = array('Html', 'Form', 'Time', 'Js');
 
 public $paginate = array(
@@ -29,7 +29,28 @@ public $paginate = array(
         'Review',
         'User',
         'RestaurantSpecialty'
-    );
+	);
+	public function beforeFilter(){
+		parent::beforeFilter();
+		$this->Auth->allow('view','search','searchjson');
+	}
+
+	public function isAuthorized($user){
+
+		if(isset($user['role']) && $user['role'] == 'user'){
+
+			if(in_array($this->action, array('edit','view'))){
+				return true;
+			}else{
+				if($this->Auth->user('id')){
+
+					$this->redirect($this->Auth->redirect());
+				}
+			}
+		}else{
+			return true;
+		}
+	}
 
 /**
  * index method
@@ -52,18 +73,32 @@ public $paginate = array(
  * @return void
  */
 	public function view($id = null) {
+
+		$userLocation = @unserialize (file_get_contents('http://ip-api.com/php/'));
+		if ($userLocation && $userLocation['status'] == 'success') {
+			$this->Session->write('userLocation',$userLocation);
+		}
+
 		if (!$this->Restaurant->exists($id)) {
 			throw new NotFoundException(__('Restaurante no encontrado'));
 		}
 
 		$restaurant = $this->Restaurant->findById($id);
+		
+		$userLocation = ($this->Session->read('userLocation'));
+		$distance = $this->Restaurant->restaurantUserDistance($restaurant['Restaurant']['latitude'], $restaurant['Restaurant']['longitude'], $userLocation);
+
+		if($distance){
+			$restaurant['Restaurant']['user_distance'] = $distance;
+		}
+	
 		foreach ($restaurant['Review'] as $key => $review){
             $user = $this->User->findById($review['user_id']);
             $review['username'] = $user['User']['username'];
             $restaurant['Review'][$key] = $review;
         }
         $averages = $this->Review->getAveragesByRestaurantId($id);
-        $specialties = $this->RestaurantSpecialty->getSpecialtiesNamesByRestaurantId($id);
+		$specialties = $this->RestaurantSpecialty->getSpecialtiesNamesByRestaurantId($id);
 
 		$this->set(array(
 						'restaurant' => $restaurant,
@@ -130,7 +165,7 @@ public $paginate = array(
 					$this->RestaurantSpecialty->addWithSpecialtyIdAndRestaurantId($specialty, $id);
 				}
 
-				$this->Flash->success(__('El restaurante ha sido actualizado.'));
+				$this->Session->setFlash(__('El restaurante ha sido actualizado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Flash->error(__('El restaurante no ha podido ser actualizado.'));
@@ -185,9 +220,7 @@ public $paginate = array(
 			$terms = array_diff($terms, array(''));
 			foreach($terms as $term){
 				$conditionsRestaurant[] = array('Restaurant.name LIKE' => '%'.$term.'%');
-
 			}
-
 			$restaurants = $this->Restaurant->find('all', array('recursive' => -1,
 											'fields' => array(
 												'Restaurant.id',
@@ -198,56 +231,142 @@ public $paginate = array(
 											'conditions' => $conditionsRestaurant,
 											'limit' => 20
 										));
-
+			
 			echo json_encode($restaurants);
 			$this->autoRender = false;							
 		}
 	}
 
+	public function searchtownjson(){
+		$term = null;
+		if(!empty($this->request->query['term'])){
+			$term = $this->request->query['term'];
+			$terms = explode(' ', trim($term));
+			$terms = array_diff($terms, array(''));
+			foreach($terms as $term){
+				$conditionsRestaurant[] = array('Restaurant.town LIKE' => '%'.$term.'%');
+			}
+			$restaurants = $this->Restaurant->find('all', array('recursive' => -1,
+											'fields' =>
+											
+												array('DISTINCT Restaurant.town')
+											, 
+											'conditions' => $conditionsRestaurant,
+											'limit' => 20
+										));
+			
+			echo json_encode($restaurants);
+			$this->autoRender = false;							
+		}
+
+	}
+
+
+	public function restaurantJson(){
+		$restaurants = ($this->Session->read('restaurants'));
+		
+		echo json_encode($restaurants);
+		$this->autoRender = false;		
+
+	}
+
 	public function search(){
+
+		$userLocation = @unserialize (file_get_contents('http://ip-api.com/php/'));
+		if ($userLocation && $userLocation['status'] == 'success') {
+			$this->Session->write('userLocation',$userLocation);
+		}
+
 		$search = null;
+
+		foreach($this->request->query as $key => $query){
+			if($query == '1'){
+				$specialties[] = $key;
+			}
+		}
+
 		if(!empty($this->request->query['search'])){
 
 			$search = $this->request->query['search'];
+			$town = $this->request->query['search-town'];
+
 			$search = preg_replace('/[^a-zA-ZñÑáéíóúÁÉÍÓÚ0-9 ]/', '', $search);
 			$terms = explode(' ', trim($search));
 			$terms = array_diff($terms, array(''));
 			foreach($terms as $term){
-				$terms1[] = preg_replace('/[^a-zA-ZñÑáéíóúÁÉÍÓÚ0-9 ]/', '', $term);
-				$conditionsRest[] = array('Restaurant.name LIKE' =>  '%'.$term . '%');
-				$conditionsTown[] = array('Restaurant.town LIKE' =>  '%'.$term . '%');
-			}
-			$restaurants = $this->Restaurant->find('all', 
-								array('recursive' => -1, 
-								'conditions' => $conditionsRest, 
-								'limit' => 100)
-							);
-			$towns = $this->Restaurant->find('all', 
-							array('recursive' => -1, 
-							'fields' => array('DISTINCT Restaurant.town'),
-							'conditions' => $conditionsTown, 
-							'limit' => 5)
-						);
-			if(count($restaurants) == 1 && count($towns)==0){
-				return $this->redirect(array('controller' => 'restaurants', 
-											'action' => 'view', 
-											$restaurants[0]['Restaurant']['id']
-										)
-									);
-			}
-			$terms1 = array_diff($terms1, array(''));
-			$this->set(
-				compact('restaurants', 'terms1', 'towns')
+				$conditionsRest[] = array('Restaurant.name LIKE' =>  '%'.$term.'%',
+											'Restaurant.town LIKE' =>  '%'.$town.'%', 				
 			);
-		}
-		$this->set(compact('search'));
-		
-		if($this->request->is('ajax')){
-			$this->layout = false;
-			$this->set('ajax', 1);
+			}
+			if(!isset($specialties)){
+				foreach($this->request->query as $key => $query){				
+						$specialties[] = $key;				
+				}
+			}
+			$restaurants = $this->Restaurant->search($conditionsRest, $specialties);
+			
+			foreach ($restaurants as $key => $restaurant){
+				$general = $this->Review->getGeneralRateByRestaurantId($restaurant['Restaurant']['id']);
+				$knowledge = $this->Review->getGlutenKnowledgeByRestaurantId($restaurant['Restaurant']['id']);
+				$restaurants[$key]['Restaurant']['general_rate'] = $general[0]['average'];
+				$restaurants[$key]['Restaurant']['gluten_knowledge'] = $knowledge[0]['average'];
+			}
+	
+		}else if(!empty($this->request->query['search-town'])){
+
+			$town = $this->request->query['search-town'];
+
+			$search = preg_replace('/[^a-zA-ZñÑáéíóúÁÉÍÓÚ0-9 ]/', '', $town);
+			$terms = explode(' ', trim($search));
+			$terms = array_diff($terms, array(''));
+			foreach($terms as $term){
+
+				$conditionsRest[] = array('Restaurant.town LIKE' =>  '%'.$town.'%', 				
+			);
+			}
+			if(!isset($specialties)){
+				foreach($this->request->query as $key => $query){				
+						$specialties[] = $key;				
+				}
+			}
+			$restaurants = $this->Restaurant->search($conditionsRest, $specialties);
+			
+			foreach ($restaurants as $key => $restaurant){
+				$general = $this->Review->getGeneralRateByRestaurantId($restaurant['Restaurant']['id']);
+				$knowledge = $this->Review->getGlutenKnowledgeByRestaurantId($restaurant['Restaurant']['id']);
+				$restaurants[$key]['Restaurant']['general_rate'] = $general[0]['average'];
+				$restaurants[$key]['Restaurant']['gluten_knowledge'] = $knowledge[0]['average'];
+			}
 		}else{
-			$this->set('ajax', 0);
+			$restaurants = $this->Restaurant->findBestGlutenKnowledgeRated(5);
+			foreach ($restaurants as $key => $restaurant){
+				$general = $this->Review->getGeneralRateByRestaurantId($restaurant['Restaurant']['id']);
+				$knowledge = $this->Review->getGlutenKnowledgeByRestaurantId($restaurant['Restaurant']['id']);
+				$restaurants[$key]['Restaurant']['general_rate'] = $general[0]['average'];
+				$restaurants[$key]['Restaurant']['gluten_knowledge'] = $knowledge[0]['average'];
+			}
 		}
+		
+		$userLocation = ($this->Session->read('userLocation'));
+
+		foreach ($restaurants as $key => $restaurant){
+			$distance = $this->Restaurant->restaurantUserDistance($restaurant['Restaurant']['latitude'], $restaurant['Restaurant']['longitude'], $userLocation);
+		
+			if($distance){
+				$restaurants[$key]['Restaurant']['user_distance'] = $distance;
+			}
+		}
+
+		$provinces = $this->Restaurant->Province->find('list');
+		$specialties = $this->Specialty->find('list');
+		$this->Session->write('restaurants',$restaurants);
+
+        $this->set(
+                array(
+					'specialties' => $specialties,
+					'restaurants' => $restaurants
+                )
+                );
 
 	}
 }

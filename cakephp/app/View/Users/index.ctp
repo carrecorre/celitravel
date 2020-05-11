@@ -37,11 +37,11 @@ $this->Paginator->options(
 			
 			<th><?php echo $this->Paginator->sort('Foto'); ?></th>
 			<th><?php echo $this->Paginator->sort('Id'); ?></th>
+			<th><?php echo $this->Paginator->sort('Rol'); ?></th>
 			<th><?php echo $this->Paginator->sort('Nombre'); ?></th>
 			<th><?php echo $this->Paginator->sort('Apellidos'); ?></th>
 			<th><?php echo $this->Paginator->sort('Email'); ?></th>
 			<th><?php echo $this->Paginator->sort('Nombre de usuario'); ?></th>
-			<th><?php echo $this->Paginator->sort('Contraseña'); ?></th>
 			<th><?php echo $this->Paginator->sort('Fecha de creación'); ?></th>
 			<th class="actions"><?php echo __('Acciones'); ?></th>
 	</tr>
@@ -58,11 +58,11 @@ $this->Paginator->options(
 					); 
 					?>&nbsp;</td>
 		<td><?php echo h($user['User']['id']); ?>&nbsp;</td>
+		<td><?php echo h($user['User']['role']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['name']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['surname']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['email']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['username']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['password']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['creation_date']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('Ver'),

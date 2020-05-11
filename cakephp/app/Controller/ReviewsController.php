@@ -46,6 +46,19 @@ class ReviewsController extends AppController {
  * @return void
  */
 	public function add() {
+
+
+		if ($this->request->is('post')) {
+			$this->Review->create();
+				$this->Review->save($this->request->data);
+				return true;
+			}else{
+				echo json_encode(array('false'));
+				
+		}
+
+	$this->autoRender = false;	
+
 		if ($this->request->is('post')) {
 			$this->Review->create();
 			if ($this->Review->save($this->request->data)) {

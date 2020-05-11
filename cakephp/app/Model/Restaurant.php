@@ -210,4 +210,136 @@ class Restaurant extends AppModel {
 			return true;
 		}	
 	}
+
+	public function restaurantUserDistance($restLat, $restLong, $userLocation){
+
+		if($userLocation != null){
+			
+		$userLat = $userLocation['lat'];
+		$userLong = $userLocation['lon'];
+
+		$theta = $restLong - $userLong;
+		$dist = sin(deg2rad($restLat)) * sin(deg2rad($userLat)) +  cos(deg2rad($restLat)) * cos(deg2rad($userLat)) * cos(deg2rad($theta));
+		$dist = acos($dist);
+		$dist = rad2deg($dist);
+		$distance = $dist * 60 * 1.1515;
+		
+			return $distance;
+
+		}else{
+			return false;
+
+		}
+	}
+
+	public function findBestGeneralRated($number){
+		return $this->find (
+            'all',
+            array(
+                'joins' => array (
+                    array(
+                        'alias' => 'Review',
+                        'table' => 'reviews',
+                        'type' => 'INNER',
+                        'conditions' => array(
+                            'Review.restaurant_id = Restaurant.id',
+                        ),
+                    ),
+                    
+                ),
+                'group' => array(
+                    'Review.restaurant_id',
+                ),
+                'order' => array(
+                    'AVG(Review.general_rate) ' => 'desc',
+				),
+				'limit' => $number
+				
+            )
+        );
+
+	}
+
+	public function findBestGlutenKnowledgeRated($number){
+		return $this->find (
+            'all',
+            array(
+                'joins' => array (
+                    array(
+                        'alias' => 'Review',
+                        'table' => 'reviews',
+                        'type' => 'INNER',
+                        'conditions' => array(
+                            'Review.restaurant_id = Restaurant.id',
+                        ),
+					),
+	
+                ),
+                'group' => array(
+                    'Review.restaurant_id',
+                ),
+                'order' => array(
+                    'AVG(Review.gluten_knowledge) ' => 'desc',
+				),
+				'limit' => $number
+            )
+        );
+
+	}
+
+	public function findBestGlutenAdaptationRated($number){
+		return $this->find (
+            'all',
+            array(
+                'joins' => array (
+                    array(
+                        'alias' => 'Review',
+                        'table' => 'reviews',
+                        'type' => 'INNER',
+                        'conditions' => array(
+                            'Review.restaurant_id = Restaurant.id',
+                        ),
+					),
+	
+                ),
+                'group' => array(
+                    'Review.restaurant_id',
+                ),
+                'order' => array(
+                    'AVG(Review.gluten_adaptation) ' => 'desc',
+				),
+				'limit' => $number
+				
+            )
+        );
+
+	}
+
+	public function search($conditions, $specialties){
+		return $this->find (
+			'all',
+			
+			array(
+				'fields' => array('DISTINCT Restaurant.*',
+								  'Province.*'
+								),
+                'conditions' => $conditions,
+				'limit' => 100,		
+				'joins' => array (
+                    array(
+                        'alias' => 'RestaurantSpecialty',
+                        'table' => 'restaurants_specialties',
+						'type' => 'INNER',
+						'fields' => array('RestaurantSpecialty.restaurant_id'),
+                        'conditions' => array(
+							'RestaurantSpecialty.restaurant_id = Restaurant.id',
+							'RestaurantSpecialty.specialty_id' => $specialties
+                        ),
+					),
+	
+                ),
+			)
+			
+        );
+	}
 }

@@ -15,7 +15,7 @@ class UsersController extends AppController {
  *
  * @var array
  */
-	public $components = array('RequestHandler', 'Session');
+	public $components = array('RequestHandler');
 	public $helpers = array('Html', 'Form', 'Time', 'Js');
 
 	public $paginate = array(
@@ -31,7 +31,46 @@ class UsersController extends AppController {
         'Review',
         'Restaurant',
         'RestaurantSpecialty'
-    );
+	);
+	
+	public function beforeFilter(){
+		parent::beforeFilter();
+		$this->Auth->allow('add');
+	}
+
+	public function isAuthorized($user){
+
+		if(isset($user['role']) && $user['role'] == 'user'){
+
+			if(in_array($this->action, array('edit','view'))){
+				return true;
+			}else{
+				if($this->Auth->user('id')){
+
+					$this->redirect($this->Auth->redirect());
+				}
+			}
+		}else{
+			return true;
+		}
+	}
+
+	public function login(){
+
+		if ($this->request->is('post')) {
+			if($this->Auth->login()){
+				return $this->redirect($this->Auth->redirectUrl());
+			}else{
+				echo json_encode(array('false'));
+			}		
+		}
+
+	$this->autoRender = false;	
+	}
+
+	public function logout(){		
+		return $this->redirect($this->Auth->logout());	
+	}
 
 /**
  * index method
@@ -57,6 +96,9 @@ class UsersController extends AppController {
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Usuario no encontrado'));
 		}
+		if($this->Auth->user('id')!= $id){
+			return $this->redirect(array('controller'=>'pages','action' => 'home'));
+		}
 		$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
 		$this->set('user', $this->User->find('first', $options));
 	}
@@ -71,7 +113,7 @@ class UsersController extends AppController {
 			$this->User->create();
 			if ($this->User->save($this->request->data)) {
 				$this->Flash->success(__('Usuario registrado correctamente.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(array('controller'=>'pages','action' => 'home'));
 			} else {
 				$this->Flash->error(__('Error al registrar el usuario.'));
 			}
@@ -89,12 +131,16 @@ class UsersController extends AppController {
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Usuario no encontrado'));
 		}
+		if($this->Auth->user('id')!= $id){
+			return $this->redirect(array('controller'=>'pages','action' => 'home'));
+		}
 		if ($this->request->is(array('post', 'put'))) {
+			debug($this->request->data);
 			if ($this->User->save($this->request->data)) {
-				$this->Flash->success(__('Usuario guardado correctamente.'));
-				return $this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Usuario guardado correctamente.'));
+				return $this->redirect(array('controller'=>'pages','action' => 'home'));
 			} else {
-				$this->Flash->error(__('Error al guardar el usuario.'));
+				$this->Session->setFlash(__('Error al guardar el usuario.'));
 			}
 		} else {
 			$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
@@ -128,6 +174,6 @@ class UsersController extends AppController {
 		} else {
 			$this->Flash->error(__('Error al eliminar el usuario.'));
 		}
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(array('controller'=>'pages','action' => 'home'));
 	}
 }

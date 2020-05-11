@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-04-2020 a las 21:44:31
+-- Tiempo de generación: 11-05-2020 a las 20:43:48
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `restaurants` (
 --
 
 INSERT INTO `restaurants` (`id`, `name`, `address`, `postal_code`, `phone`, `email`, `foto`, `foto_dir`, `web`, `province_id`, `town`, `monday_open`, `monday_close`, `tuesday_open`, `tuesday_close`, `wednesday_open`, `wednesday_close`, `thursday_open`, `thursday_close`, `friday_open`, `friday_close`, `saturday_open`, `saturday_close`, `sunday_open`, `sunday_close`, `latitude`, `longitude`) VALUES
-(1, 'La taberna', 'C/ Vega 3', '09120', '947368974', 'taberna@gmail.com', 'rest1.jpg', '1', 'www.lataberna.com', 10, 'Villadiego', '08:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '02:00:00', '08:00:00', '02:00:00', '10:00:00', '22:00:00', '42.51594179550307000000', '-4.00890991268176040000'),
+(1, 'La taberna', 'C/ Vega 2', '09120', '947368974', 'taberna@gmail.com', 'rest1.jpg', '1', 'www.lataberna.com', 10, 'Villadiego', '08:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '23:00:00', '10:00:00', '02:00:00', '08:00:00', '02:00:00', '10:00:00', '22:00:00', '42.51594179550307000000', '-4.00890991268176040000'),
 (2, 'La Cueva', 'C/ Mayor 7', '09120', '947360017', 'cueva@gmail.com', 'rest2.jpg', '2', 'www.lacueva.es', 10, 'Villadiego', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '42.51483504558433400000', '-4.01126925043702400000'),
 (3, 'La Mafia', 'C/ Laín Calvo 50', '09003', '947264478', 'mafiaburgos@gmail.com', 'rest3.jpg', '3', 'www.lamafia.es', 10, 'Burgos', '12:00:00', '23:00:00', '12:00:00', '23:00:00', '12:00:00', '23:00:00', '12:00:00', '23:00:00', '12:00:00', '23:00:00', '12:00:00', '23:30:00', '12:00:00', '23:30:00', '42.34316726876174600000', '-3.70097022019416460000'),
 (4, 'Hammbur', 'C/ San Lorenzo, 28', '09003', '947279941', 'hammmbur@gmail.com', 'rest4.jpg', '4', 'www.hammmbur.es', 10, 'Burgos', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '13:00:00', '23:00:00', '42.34211575014886400000', '-3.70141587560465900000'),
@@ -149,15 +149,13 @@ CREATE TABLE IF NOT EXISTS `restaurants_specialties` (
 `id` int(11) NOT NULL,
   `restaurant_id` int(11) DEFAULT NULL,
   `specialty_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `restaurants_specialties`
 --
 
 INSERT INTO `restaurants_specialties` (`id`, `restaurant_id`, `specialty_id`) VALUES
-(1, 1, 1),
-(2, 1, 2),
 (3, 2, 5),
 (4, 3, 2),
 (5, 3, 3),
@@ -169,7 +167,10 @@ INSERT INTO `restaurants_specialties` (`id`, `restaurant_id`, `specialty_id`) VA
 (11, 5, 4),
 (12, 6, 5),
 (13, 7, 3),
-(14, 7, 4);
+(14, 7, 4),
+(19, 1, 1),
+(20, 1, 2),
+(21, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -186,7 +187,22 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   `restaurant_id` int(10) DEFAULT NULL,
   `user_id` int(10) DEFAULT NULL,
   `date` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `review`, `general_rate`, `gluten_knowledge`, `gluten_adaptation`, `restaurant_id`, `user_id`, `date`) VALUES
+(1, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab cupiditate eaque esse nulla! Illum aliquam quasi quaerat modi ad, suscipit eveniet explicabo magnam inventore laudantium consequuntur necessitatibus consequatur, atque tenetur.', 1.00, 4.00, 3.00, 1, 1, '2020-05-07 00:28:10'),
+(2, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab cupiditate eaque esse nulla! Illum aliquam quasi quaerat modi ad, suscipit eveniet explicabo magnam inventore laudantium consequuntur necessitatibus consequatur, atque tenetur.', 1.00, 3.00, 3.00, 1, 1, '2020-05-07 00:28:10'),
+(3, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab cupiditate eaque esse nulla! Illum aliquam quasi quaerat modi ad, suscipit eveniet explicabo magnam inventore laudantium consequuntur necessitatibus consequatur, atque tenetur.', 1.00, 3.00, 3.00, 7, 1, '2020-05-07 00:28:10'),
+(4, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab cupiditate eaque esse nulla! Illum aliquam quasi quaerat modi ad, suscipit eveniet explicabo magnam inventore laudantium consequuntur necessitatibus consequatur, atque tenetur.', 3.00, 5.00, 3.00, 6, 1, '2020-05-07 00:28:10'),
+(5, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab cupiditate eaque esse nulla! Illum aliquam quasi quaerat modi ad, suscipit eveniet explicabo magnam inventore laudantium consequuntur necessitatibus consequatur, atque tenetur.', 4.00, 3.00, 3.00, 5, 1, '2020-05-07 00:28:10'),
+(6, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab cupiditate eaque esse nulla! Illum aliquam quasi quaerat modi ad, suscipit eveniet explicabo magnam inventore laudantium consequuntur necessitatibus consequatur, atque tenetur.', 2.00, 3.00, 3.00, 3, 1, '2020-05-07 00:28:10'),
+(7, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab cupiditate eaque esse nulla! Illum aliquam quasi quaerat modi ad, suscipit eveniet explicabo magnam inventore laudantium consequuntur necessitatibus consequatur, atque tenetur.', 2.00, 3.00, 3.00, 2, 1, '2020-05-07 00:28:10'),
+(8, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab cupiditate eaque esse nulla! Illum aliquam quasi quaerat modi ad, suscipit eveniet explicabo magnam inventore laudantium consequuntur necessitatibus consequatur, atque tenetur.', 3.00, 3.00, 3.00, 1, 1, '2020-05-07 00:28:10'),
+(9, 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab cupiditate eaque esse nulla! Illum aliquam quasi quaerat modi ad, suscipit eveniet explicabo magnam inventore laudantium consequuntur necessitatibus consequatur, atque tenetur.', 1.00, 3.00, 3.00, 4, 1, '2020-05-07 00:28:10');
 
 -- --------------------------------------------------------
 
@@ -223,25 +239,26 @@ CREATE TABLE IF NOT EXISTS `users` (
 `id` int(10) NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `surname` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `role` int(10) DEFAULT NULL,
+  `role` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `foto` varchar(255) DEFAULT NULL,
   `foto_dir` varchar(255) DEFAULT NULL,
   `creation_date` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `surname`, `role`, `email`, `username`, `password`, `foto`, `foto_dir`, `creation_date`) VALUES
-(1, 'Ángel', 'Carretón', 1, 'angelcarrod@gmail.com', 'angelcarrod', '1234', 'user4.jpg', '1', '2020-04-28 21:08:22'),
-(2, 'Sergio', 'Rodríguez', 2, 'sergiorod@gmail.com', 'sergioSer', '12345', 'user1.jpg', '2', '2020-04-28 21:08:52'),
-(3, 'Andrea', 'Zaldua', 2, 'zaldu@gmail.com', 'zaldu', '111', 'user6.jpg', '3', '2020-04-28 21:09:25'),
-(4, 'Manuel', 'García', 2, 'mgf@gmail.com', 'manugf', '222', 'user2.jpg', '4', '2020-04-28 21:09:54'),
-(5, 'Miguel', 'Amo', 2, 'mag@mail.com', 'migui', 'migui123', 'user3.JPG', '5', '2020-04-28 21:10:31');
+(1, 'Ángel', 'Carretón', 'admin', 'angelcarrod@gmail.com', 'angelcarrod', '$2a$10$3eSC3r2LYQUMJRNZpg5U8OaA8BzOi7hGQ14xkP8bhH5iVdvYk0o06', 'user4.jpg', '1', '2020-04-28 21:08:22'),
+(2, 'Sergio', 'Rodríguez', 'user', 'sergiorod@gmail.com', 'sergio', '$2a$10$NCkafiUw2lsmnkfqN0T1Gu14tyt5T/kaH1UcN5GS5kh823Uk8byEO', 'user1.jpg', '2', '2020-04-28 21:08:52'),
+(3, 'Andrea', 'Zaldua', 'user', 'zaldu@gmail.com', 'zaldu', '111', 'user6.jpg', '3', '2020-04-28 21:09:25'),
+(4, 'Manuel', 'García', 'user', 'mgf@gmail.com', 'manugf', '222', 'user2.jpg', '4', '2020-04-28 21:09:54'),
+(5, 'Miguel', 'Amo', 'user', 'mag@mail.com', 'migui', 'migui123', 'user3.JPG', '5', '2020-04-28 21:10:31'),
+(6, 'Federico', 'J Losantos', 'user', 'fjl@gmial.com', 'fjl', '$2a$10$aoITN48yJyqeJgfXzX36zuKzhhyy/qTVK5d.JZOaZJVS61uEM4jDC', 'user5.jpg', '6', '2020-05-03 23:46:25');
 
 --
 -- Índices para tablas volcadas
@@ -301,12 +318,12 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 -- AUTO_INCREMENT de la tabla `restaurants_specialties`
 --
 ALTER TABLE `restaurants_specialties`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT de la tabla `reviews`
 --
 ALTER TABLE `reviews`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=37;
 --
 -- AUTO_INCREMENT de la tabla `specialties`
 --
@@ -316,7 +333,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-MODIFY `id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- Restricciones para tablas volcadas
 --

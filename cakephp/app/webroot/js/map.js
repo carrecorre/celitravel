@@ -51,7 +51,7 @@ myMap.doubleClickZoom.disable();
                 console.log($('img').filter('.leaflet-pane'));
                 $('img').filter('.leaflet-zoom-animated').remove();
                 let position = myMap.mouseEventToLatLng(e.originalEvent);
-            let marker = L.marker([position.lat, position.lng]).addTo(myMap); 
+                let marker = L.marker([position.lat, position.lng]).addTo(myMap); 
             
                 $('#RestaurantLatitude').val(position.lat);
                 $('#RestaurantLongitude').val(position.lng);

@@ -1,4 +1,5 @@
 <?php
+App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 /**
  * User Model
@@ -136,7 +137,7 @@ class User extends AppModel {
 		)
 	);
 
-	function checkUniqueName($data){
+	public function checkUniqueName($data){
 
 		$isUnique = $this->find('first',
 								array(
@@ -150,5 +151,18 @@ class User extends AppModel {
 			return true;
 		}	
 	}
+
+	
+
+	public function beforeSave($options = array()){
+
+		if(isset($this->data[$this->alias]['password'])){
+
+			$passwordHasher = new BlowfishPasswordHasher();
+			$this->data[$this->alias]['password'] = $passwordHasher->hash($this->data[$this->alias]['password']);
+		}
+		return true;
+	}
+
 
 }

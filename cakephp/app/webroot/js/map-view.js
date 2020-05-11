@@ -13,7 +13,15 @@ myMap.doubleClickZoom.disable();
         maxZoom: 50,
     }).addTo(myMap);
 
-    let marker = L.marker([lat, long]).addTo(myMap);
+    let iconMarker = L.icon({
+        iconUrl: '/cakephp/img/marker.png',
+        iconSize: [40, 50],
+        iconAnchor: [30, 60]
+    })
+
+    let marker = L.marker([lat, long], {icon: iconMarker}).addTo(myMap);
+
+    
 
 myMap.on('dblclick', e => {
     let position = myMap.mouseEventToLatLng(e.originalEvent);

@@ -1,8 +1,16 @@
+
+
 <div class="users form">
 <?php echo $this->Form->create('User', array('type' => 'file', 'novalidate' => 'novalidate')); ?>
 	<fieldset>
 		<legend class='row'><?php echo __('Añadir usuario'); ?></legend>
 	<?php
+		echo $this->Form->input('role',
+		array(
+			'type' => 'hidden',
+			'value' => 'user'
+			)		
+);
 		echo $this->Form->input('name',
 			array(
 				'label' => ('Nombre'),
