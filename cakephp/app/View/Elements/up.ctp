@@ -1,0 +1,1 @@
+<span class="ir-arriba icon-arrow-up2"><i class="fas fa-arrow-up fa-2x"></i></span>

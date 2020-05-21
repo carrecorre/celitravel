@@ -14,17 +14,6 @@ $this->Paginator->options(
 
 <div class="page-header">
 	<h2><?php echo __('Usuarios'); ?></h2>
-
-	<?php
-    echo $this->Html->link('Crear usuario', 
-                            array(
-                                'controller' => 'users',
-                                'action' => 'add'
-                                ),
-								array('class'=> 'btn btn-secondary')
-                            );
-?>
-
 </div>
 
 <hr>
@@ -35,14 +24,14 @@ $this->Paginator->options(
 	<thead>
 	<tr>
 			
-			<th><?php echo $this->Paginator->sort('Foto'); ?></th>
-			<th><?php echo $this->Paginator->sort('Id'); ?></th>
-			<th><?php echo $this->Paginator->sort('Rol'); ?></th>
-			<th><?php echo $this->Paginator->sort('Nombre'); ?></th>
-			<th><?php echo $this->Paginator->sort('Apellidos'); ?></th>
-			<th><?php echo $this->Paginator->sort('Email'); ?></th>
-			<th><?php echo $this->Paginator->sort('Nombre de usuario'); ?></th>
-			<th><?php echo $this->Paginator->sort('Fecha de creación'); ?></th>
+			<th>Foto</th>
+			<th>Id</th>
+			<th>Rol</th>
+			<th>Nombre</th>
+			<th>Apellidos</th>
+			<th>Email</th>
+			<th>Nombre de usuario</th>
+			<th>Fecha de creación</th>
 			<th class="actions"><?php echo __('Acciones'); ?></th>
 	</tr>
 	</thead>
@@ -53,7 +42,7 @@ $this->Paginator->options(
 				echo $this->Html->image(
 					'../files/user/foto/'.$user['User']['foto_dir'].'/'.$user['User']['foto'],
 					array(
-						'class' => 'img-round'
+						'class' => 'img-round-index'
 						)
 					); 
 					?>&nbsp;</td>
@@ -65,26 +54,32 @@ $this->Paginator->options(
 		<td><?php echo h($user['User']['username']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['creation_date']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('Ver'),
-										array(
+		<?php echo $this->Html->link('<span><i class="fas fa-eye"></i></span>', 
+									array(
 											'action' => 'view', 
 											$user['User']['id']),
-										array('class'=> 'btn btn-secondary')
-										); ?>
-			<?php echo $this->Html->link(__('Editar'), 
-										array(
+									array(
+										'escape'=> false
+									)
+									); ?>
+			<?php echo $this->Html->link('<span><i class="fas fa-edit"></i></span>', 
+									array(
 											'action' => 'edit', 
 											$user['User']['id']),
-										array('class'=> 'btn btn-secondary')
-										); ?>
-			<?php echo $this->Form->postLink(__('Eliminar'),
+									array(
+										'escape'=> false
+									)
+									); ?>
+			<?php echo $this->Form->postLink('<span><i class="fas fa-trash"></i></span>', 
+									array(
+										'action' => 'delete', 
+										$user['User']['id']),
 										array(
-											'action' => 'delete', 
-											$user['User']['id']), 
-										array('class'=> 'btn btn-secondary'),
-										array('confirm' => '¿Estás seguro que quieres eliminar el restaurante?',
-											)
-										); 
+											'escape'=> false
+										),
+									array('confirm' => '¿Estás seguro que quieres eliminar el usuario?',
+										)
+									);
 			?>
 		</td>
 	</tr>
@@ -93,21 +88,19 @@ $this->Paginator->options(
 	</table>
 
 </div>
-<p>
-	<?php
-	echo $this->Paginator->counter(array(
-		'format' => __('Página {:page} de {:pages}, {:current} registros de {:count} totales')
-	));
-	?>	</p>
-	<div class="paging">
+<div class="paging">
 	<?php
 		echo $this->Paginator->prev('< ' . __('Anterior'), array(), null, array('class' => 'prev disabled btn btn-secondary'));
 		echo $this->Paginator->numbers(array('separator' => ''));
 		echo $this->Paginator->next(__('Siguiente') . ' >', array(), null, array('class' => 'next disabled btn btn-secondary'));
 	?>
+	<p>
+	<?php
+	echo $this->Paginator->counter(array(
+		'format' => __('Página {:page} de {:pages}, {:count} resultados totales')
+	));
+	?>	
+	</p>
+	
 	</div>
-
-
-	<?php $this->Js->writeBuffer(); ?> 
-
 </div>

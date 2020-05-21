@@ -78,11 +78,17 @@ class UsersController extends AppController {
  * @return void
  */
 	public function index() {
-		$this->User->recursive = 0;
-		$this->paginate['User']['limit'] = 10;
-		$this->paginate['User']['order'] = array('User.id' => 'asc');
-		//$this->paginate['User']['conditions'] => array('User.id' => '');
-		$this->set('users', $this->paginate());
+		if($this->Auth->user('role')!= 'admin'){
+			return $this->redirect(array('controller'=>'pages','action' => 'home'));
+		}
+		$conditions[] = array();
+		$paramsConsulta = array();
+		$users = $this->paginar(
+			$paramsConsulta,
+			$conditions,
+			10
+		);
+		$this->set('users', $users);
 	}
 
 /**
@@ -96,11 +102,49 @@ class UsersController extends AppController {
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Usuario no encontrado'));
 		}
-		if($this->Auth->user('id')!= $id){
-			return $this->redirect(array('controller'=>'pages','action' => 'home'));
+		if($this->Auth->user('role')!='admin'){
+			if($this->Auth->user('id')!= $id){
+				return $this->redirect(array('controller'=>'pages','action' => 'home'));
+			}
 		}
 		$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
-		$this->set('user', $this->User->find('first', $options));
+
+		$user = $this->User->find('first', $options);
+
+		$conditions[] = array('User.id LIKE' =>  $id);
+		
+			$paramsConsulta = array(
+				'fields' => array('Review.*'),	
+							'alias' => 'Review',
+							'table' => 'reviews',
+							'order' => "Review.date DESC",
+							'conditions' => array(
+								'Review.user_id = User.id'
+							)	
+			);
+
+		$reviews = $this->paginar(
+			$paramsConsulta,
+			$conditions,
+			5,
+			'Review'
+		);
+		
+		foreach ($reviews as $key => $review){
+            $restaurant = $this->Restaurant->findById($review['Review']['restaurant_id']);
+			$reviews[$key]['Review']['restaurant_name'] =  $restaurant['Restaurant']['name'];
+			$reviews[$key]['Review']['restaurant_address'] = $restaurant['Restaurant']['address'].' - '.
+			$restaurant['Restaurant']['town'].', '.
+			$restaurant['Restaurant']['postal_code'].', '.
+			$restaurant['Province']['name'].'('.
+			$restaurant['Province']['community'].')';
+		}
+
+		$this->set(array(
+						'user' => $user,
+				   		'reviews' => $reviews
+					)
+				);
 	}
 
 /**
@@ -109,13 +153,17 @@ class UsersController extends AppController {
  * @return void
  */
 	public function add() {
+		
 		if ($this->request->is('post')) {
+			if($this->request->data['User']['role']=='0'){
+				$this->request->data['User']['role'] = 'user';
+			}
 			$this->User->create();
 			if ($this->User->save($this->request->data)) {
-				$this->Flash->success(__('Usuario registrado correctamente.'));
+				$this->Session->setFlash(__('Usuario registrado correctamente.'));
 				return $this->redirect(array('controller'=>'pages','action' => 'home'));
 			} else {
-				$this->Flash->error(__('Error al registrar el usuario.'));
+				$this->Session->setFlash(__('Error al registrar el usuario.'));
 			}
 		}
 	}
@@ -128,17 +176,21 @@ class UsersController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+		
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Usuario no encontrado'));
 		}
-		if($this->Auth->user('id')!= $id){
-			return $this->redirect(array('controller'=>'pages','action' => 'home'));
+		if($this->Auth->user('role')!='admin'){
+			if($this->Auth->user('id')!= $id){
+				return $this->redirect(array('controller'=>'pages','action' => 'home'));
+			}
 		}
+		
 		if ($this->request->is(array('post', 'put'))) {
-			debug($this->request->data);
+			
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('Usuario guardado correctamente.'));
-				return $this->redirect(array('controller'=>'pages','action' => 'home'));
+				return $this->redirect(array('action' => 'view',$id));
 			} else {
 				$this->Session->setFlash(__('Error al guardar el usuario.'));
 			}
@@ -167,13 +219,18 @@ class UsersController extends AppController {
 		}
 		$this->request->allowMethod('post', 'delete');
 
-		
 		$this->Review->deleteReviewsByUserId($id);
 		if ($this->User->delete($id)) {
-			$this->Flash->success(__('Usuario eliminado correctamente.'));
+			$this->Session->setFlash(__('Usuario eliminado correctamente.'));
 		} else {
-			$this->Flash->error(__('Error al eliminar el usuario.'));
+			$this->Session->setFlash(__('Error al eliminar el usuario.'));
 		}
-		return $this->redirect(array('controller'=>'pages','action' => 'home'));
+		$current_user = $this->Session->read('current_user');
+		if(isset($current_user) && $current_user['role']=='admin'){
+			return $this->redirect(array('action' => 'index'));
+		}else{
+			return $this->redirect(array('controller' => 'pages', 'action' => 'home'));
+		}
+		
 	}
 }

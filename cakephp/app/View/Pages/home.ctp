@@ -14,6 +14,7 @@
         ?>
             <div class="row">
                 <div class="searchbar  col-md-11">
+                <span  class="separator"><i class="fas fa-utensils"></i></span>
                     <?php
                         echo $this->Form->input('search', array(
                                                             'label' => false,
@@ -25,7 +26,7 @@
                                                             )
                                                             );
                     ?>
-                    <span class="separator">||</span>
+                    <span class="separator"><i class="fas fa-map-marker-alt"></i></span>
                     <?php
                         echo $this->Form->input('search-town', array(
                                                             'label' => false,
@@ -33,16 +34,30 @@
                                                             'id' => 'input-search-town',
                                                             'class' => 'search_input input-town col-md-5 right',
                                                             'autocomplete' => 'off',
-                                                            'placeholder' => 'CeliTravel te lo busca'
+                                                            'placeholder' => '¿Adónde quieres ir?'
                                                             )
                                                             );
                     ?>
-                    
+
+                    <?php
+                        foreach($specialties as $key => $specialty){
+                                echo $this->Form->hidden(
+                                    $key,
+                                    array(
+                                        'label' => ($specialty),
+                                        'class' => 'specialty',
+                                        'type' => 'checkbox',
+                                        'checked' => 'checked'
+                                    )
+                                ); 
+                                        
+                        }
+                    ?>
                     <?php  
                         echo $this->Form->button('', array(
                                                             'div' => false,
                                                             'class' => 'search_icon col-md-2'
-                                                            )
+                                                                )
                                                             );                    
                     ?>   
                 </div>

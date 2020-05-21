@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -40,4 +40,15 @@ class <?php echo h($controller); ?> extends AppController {
 </p>
 <?php
 echo $this->element('exception_stack_trace');
-?>
+?> -->
+
+
+<div class ="error text-center">
+    <?php 
+        echo $this->Html->image(
+            '../img/logotipo.png'
+            ); 
+	?>
+	
+	<h3>¡Vaya! Parece que no tenemos lo que buscas, prueba en otro sitio.</h3>
+</php>

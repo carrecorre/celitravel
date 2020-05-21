@@ -19,7 +19,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('Controller', 'Controller');
+App::uses('Controller', 'Controller','CakeEmail', 'Network/Email');
 
 /**
  * Application Controller
@@ -56,6 +56,7 @@ class AppController extends Controller {
 
     public function beforeFilter(){
         $this->Auth->allow('logout','home'); //acceso para no logueados
+        $this->Session->write('current_user',  $this->Auth->user());
         $this->set('current_user', $this->Auth->user());
     }
 
@@ -64,6 +65,23 @@ class AppController extends Controller {
             return true;
         }
         return false;
-	}
+    }
+    
+    public function paginar($param_consulta, $condiciones, $limit, $modelo = null) {
+        $this->Paginator = $this->Components->load(
+            'Paginator',
+            Hash::merge(
+                $param_consulta,
+                array(
+                    'limit' => $limit,
+                )
+            )
+        );
+        if(isset($modelo)){
+            return $this->Paginator->paginate($modelo, $condiciones);
+        }else{
+            return $this->Paginator->paginate($condiciones);
+        }
+    }
 
 }

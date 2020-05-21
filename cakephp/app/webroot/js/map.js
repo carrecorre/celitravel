@@ -14,6 +14,13 @@ myMap.doubleClickZoom.disable();
         maxZoom: 50,
     }).addTo(myMap);
 
+    let iconMarker = L.icon({
+        iconUrl: '../../img/marker.png',
+          iconSize: [40, 50],
+          iconAnchor: [30, 60]
+      })
+  
+
     var PeticionAjax  = (function(){
 
         var get = function(url, data){
@@ -51,8 +58,9 @@ myMap.doubleClickZoom.disable();
                 console.log($('img').filter('.leaflet-pane'));
                 $('img').filter('.leaflet-zoom-animated').remove();
                 let position = myMap.mouseEventToLatLng(e.originalEvent);
-                let marker = L.marker([position.lat, position.lng]).addTo(myMap); 
-            
+                let marker = L.marker([position.lat, position.lng], {icon: iconMarker}).addTo(myMap); 
+
+              
                 $('#RestaurantLatitude').val(position.lat);
                 $('#RestaurantLongitude').val(position.lng);
             });
@@ -62,22 +70,6 @@ myMap.doubleClickZoom.disable();
     };
 
     return updateMap();
-
-// navigator.geolocation.getCurrentPosition(
-//     (pos) => {
-//         const {coords} = pos
-//         L.marker([coords.latitude, coords.longitude]).addTo(myMap)
-//     },
-//     (err) => {
-//         console.log(err)
-//     },
-//     {
-//         enableHighAccuracy:true,
-//         timeout: 5000,
-//         maximumAge:0
-//     }
-// )
-
 
 });
 

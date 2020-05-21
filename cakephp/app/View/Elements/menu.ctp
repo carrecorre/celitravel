@@ -43,7 +43,7 @@
      
       <div class='navbar-nav mr-left' >
         <?php 
-                echo $this->Html->link('Iniciar sesion', 
+                echo $this->Html->link('Iniciar sesión', 
                                         array(
                                             'controller'=>'restaurants',
                                             'action' => 'index'
@@ -58,7 +58,7 @@
             
       </div>
     <?php else: ?>
-        <ul class='navbar-nav mr-left' >
+        <ul class='navbar-nav mr-left'>
         <?php 
 				echo $this->Html->image(
 					'../files/user/foto/'.$current_user['foto_dir'].'/'.$current_user['foto'],

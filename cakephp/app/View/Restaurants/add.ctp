@@ -7,75 +7,132 @@ echo $this->Html->script('lib/select2-4.0.0/dist/js/select2.full.min.js', array(
 echo $this->Html->css('../js/lib/select2-4.0.0/dist/css/select2.min.css', array('block' => 'script'));
 ?>
 
-<?php echo $this->Form->create('Restaurant', array('type' => 'file', 'novalidate' => 'novalidate')); ?>
-
-<fieldset>
-		<legend class="row"><?php echo __('Añadir restaurante'); ?></legend>		
-<div class="row">	
-	<div id="score"  class="col-md-3">
-		<h2>Datos</h2>
+	<?php 
+		echo $this->Form->create('Restaurant', array('type' => 'file', 
+													'novalidate' => 'novalidate',
+													'class' => 'border border-light p-5'
+												)
+										); 
+	?>
+<div class="row">
+	<p class="h2 text-center col">Añadir restaurante</p>
+		
+</div>
+<div class="row restaurant-form">
+	<div id="score" class="col-md-6 input-group">
+		
+		<div class="col-12">
+			<h2 class="text-center">Datos</h2>
+		</div>
+		<div class="col-12">
 		<?php
 			echo $this->Form->input('name',
 				array(
 					'label' => ('Nombre'),
-					'type' => 'text'
+					'type' => 'text',
+					'class' => 'form-control'
 					)		
 			);
+			?>
+			</div>
+			<div class="col-12">
+			<?php
 			echo $this->Form->input('address',
 			array(
 				'label' =>'Dirección',
-				'type' => 'text'
+				'type' => 'text',
+				'class' => 'form-control'
 				)
 			);
+		?>
+		</div>
+		<div class="col-6">
+		<?php
 			echo $this->Form->input('postal_code',
 			array(
 				'label' =>'Código postal',
-				'type' => 'text'
+				'type' => 'text',
+				'class' => 'form-control'
 				)
-			);
+			); 
+		?>
+				</div>
+		<div class="col-6">
+		<?php
 			echo $this->Form->input('phone',
 			array(
 				'label' =>'Teléfono',
-				'type' => 'text'
+				'type' => 'text',
+				'class' => 'form-control'
 				)
 			);
+			?>
+			</div>
+			<div class="col-6">
+			<?php
 			echo $this->Form->input('email',
 			array(
 				'label' =>'Email',
-				'type' => 'text'
+				'type' => 'text',
+				'class' => 'form-control'
 				)
 			);
+			?>
+			</div>
+			<div class="col-6">
+			<?php
 			echo $this->Form->input('web',
 			array(
 				'label' =>'Web',
-				'type' => 'text'
+				'type' => 'text',
+				'class' => 'form-control'
 				)
 			);
+			?>
+			</div>
+			<div class="col-6">
+			<?php
 			echo $this->Form->input('province_id',array(
 				'label' =>'Provincia',
 				'type' => 'select',
 				'empty' => true,
+				'class' => 'form-control'
+
 			));
+			?>
+			</div>
+			<div class="col-6">
+			<?php
 			echo $this->Form->input('town',
 			array(
 				'label' =>'Población',
-				'type' => 'text'
+				'type' => 'text',
+				'class' => 'form-control'
 				)
 			);
+			?>
+			</div>
+			<div class="col-12">
+			<?php
 			echo $this->Form->input('RestaurantSpecialty.specialty_id',
-		array(
-			'label' =>'Especialidades',
-			'type' => 'select',
-			'class' => 'select2-multiple',
-			'multiple' => 'multiple',
-			'options' => $specialties,
-			'empty' => true,
-		)
+			array(
+				'label' =>'Especialidades',
+				'type' => 'select',
+				'class' => 'select2-multiple form-control',
+				'multiple' => 'multiple',
+				'options' => $specialties,
+				'empty' => true,
+			)
 		);
+		?>
+		</div>
+		<div class="col-12">
+		<?php
 			echo $this->Form->input('foto',
 				array(
 					'type'=> 'file',
-					'label' => 'Foto de portada'
+					'label' => 'Foto de portada',
+					'class' => 'form-control'
 				)	
 		);
 		echo $this->Form->input('foto_dir', 
@@ -84,72 +141,146 @@ echo $this->Html->css('../js/lib/select2-4.0.0/dist/css/select2.min.css', array(
 				)
 		);
 		?>
+		</div>
 	</div>
-	<div id="timetable"  class="col-md-3">
-		<h2>Horarios</h2>
-			<div>
+	<div id="timetable" class="col-md-3 ">
+		<div class="col-12">
+			<h2 class="text-center">Horario</h2>
+		</div>
+		<div class="form-row col">
+			<div class="col-12 text-center">	
 				<label>Lunes</label>
+			</div>
+			<div class="col">
 				<?php
-					echo $this->Form->time('monday_open');
-					echo $this->Form->time('monday_close');
+					echo $this->Form->time('monday_open',
+					array('class' => 'form-control'));
 				?>
 			</div>
-			<div>
+			<div class="col">
+				<?php
+					echo $this->Form->time('monday_close',
+					array('class' => 'form-control'));
+				?>
+			</div>
+		</div>
+		<div class="form-row col">
+			<div class="col-12 text-center">
 				<label>Martes</label>
+			</div>
+			<div class="col">
 				<?php
-					echo $this->Form->time('tuesday_open');
-					echo $this->Form->time('tuesday_close');
+					echo $this->Form->time('monday_open',
+					array('class' => 'form-control'));
 				?>
 			</div>
-			<div>
+			<div class="col">
+				<?php
+					echo $this->Form->time('monday_close',
+					array('class' => 'form-control'));
+				?>
+			</div>
+		</div>
+		<div class="form-row col">
+			<div class="col-12 text-center">	
 				<label>Miércoles</label>
+			</div>
+			<div class="col">
 				<?php
-					echo $this->Form->time('wednesday_open');
-					echo $this->Form->time('wednesday_close');
+					echo $this->Form->time('monday_open',
+					array('class' => 'form-control'));
 				?>
 			</div>
-			<div>
+			<div class="col">
+				<?php
+					echo $this->Form->time('monday_close',
+					array('class' => 'form-control'));
+				?>
+			</div>
+		</div>
+		<div class="form-row col">
+			<div class="col-12 text-center">
 				<label>Jueves</label>
+			</div>
+			<div class="col">
 				<?php
-					echo $this->Form->time('thursday_open');
-					echo $this->Form->time('thursday_close');
+					echo $this->Form->time('monday_open',
+					array('class' => 'form-control'));
 				?>
 			</div>
-			<div>
+			<div class="col">
+				<?php
+					echo $this->Form->time('monday_close',
+					array('class' => 'form-control'));
+				?>
+			</div>
+		</div>
+		<div class="form-row col">
+			<div class="col-12 text-center">
 				<label>Viernes</label>
+			</div>
+			<div class="col">
 				<?php
-					echo $this->Form->time('friday_open');
-					echo $this->Form->time('friday_close');
+					echo $this->Form->time('monday_open',
+					array('class' => 'form-control'));
 				?>
 			</div>
-			<div>
+			<div class="col">
+				<?php
+					echo $this->Form->time('monday_close',
+					array('class' => 'form-control'));
+				?>
+			</div>
+		</div>
+		<div class="form-row col text-center">
+			<div class="col-12">
 				<label>Sábado</label>
+			</div>
+			<div class="col">
 				<?php
-					echo $this->Form->time('saturday_open');
-					echo $this->Form->time('saturday_close');
+					echo $this->Form->time('monday_open',
+					array('class' => 'form-control'));
 				?>
 			</div>
-			<div>
+			<div class="col">
+				<?php
+					echo $this->Form->time('monday_close',
+					array('class' => 'form-control'));
+				?>
+			</div>
+		</div>
+		<div class="form-row col text-center">
+			<div class="col-12">
 				<label>Domingo</label>
+			</div>
+			<div class="col">
 				<?php
-					echo $this->Form->time('sunday_open');
-					echo $this->Form->time('sunday_close');
+					echo $this->Form->time('monday_open',
+					array('class' => 'form-control'));
 				?>
 			</div>
+			<div class="col">
+				<?php
+					echo $this->Form->time('monday_close',
+					array('class' => 'form-control'));
+				?>
+			</div>
+		</div>
 	</div>
-	<div id="location" class="col-md-6">
-	<h2>Localización</h2>
-	
-	<div id="myMap"  class="map-edit"></div>
-	<?php
-	echo $this->Form->input('latitude',
+	<div id="location" class="col-md-3">
+	<div class="col-12">
+			<h2 class="text-center">Localización</h2>
+		</div>
+		<div id="myMap"  class="map-edit"></div>
+		<?php
+			echo $this->Form->hidden('latitude',
 			array(
 				'label' =>'Latitud',
 				'type' => 'text',
 				'readonly' => 'readonly'
 			)
 			);
-			echo $this->Form->input('longitude',
+			echo $this->Form->hidden('longitude',
 			array(
 				'label' =>'Longitud',
 				'type' => 'text',
@@ -157,10 +288,31 @@ echo $this->Html->css('../js/lib/select2-4.0.0/dist/css/select2.min.css', array(
 				)
 			);
 
-			?>
+			?>		
+			<div class="col row">
+			<div class="col form-buttons">
+				<?php 
+					$options = array(
+						'label' => 'Registrar',
+						'class' => 'btn btn-info col',
+					);
+				echo $this->Form->end($options);?>
+			</div>
+			<div class="col form-buttons">
+				<?php 
+					echo $this->Html->link('Cancelar', 
+											array(
+												'controller'=>'pages',
+												'action' => 'home'
+										),
+											array(
+												'class' => 'btn btn-danger col',
+											)
+									); 
+				?>
+			</div>	  
+		</div>
 	</div>
+</div> <!-- end row -->
 
-<?php echo $this->Form->end(__('Añadir')); ?>
-</div>
-</fieldset>
 

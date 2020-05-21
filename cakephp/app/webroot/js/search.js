@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    
     $('#input-search').autocomplete({
         minLength: 2,
         select: function(event, ui){

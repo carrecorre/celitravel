@@ -135,6 +135,10 @@ class Restaurant extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
+			'unique' => array(
+				'rule' => 'isUnique',
+				'message' => 'Email ya existe'
+				),
 		),
 		'web' => array(
 			'url' => array(
@@ -183,6 +187,19 @@ class Restaurant extends AppModel {
 	public $hasMany = array(
 		'Review' => array(
 			'className' => 'Review',
+			'foreignKey' => 'restaurant_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'RestaurantSpecialty' => array(
+			'className' => 'RestaurantSpecialty',
 			'foreignKey' => 'restaurant_id',
 			'dependent' => false,
 			'conditions' => '',
@@ -313,33 +330,5 @@ class Restaurant extends AppModel {
             )
         );
 
-	}
-
-	public function search($conditions, $specialties){
-		return $this->find (
-			'all',
-			
-			array(
-				'fields' => array('DISTINCT Restaurant.*',
-								  'Province.*'
-								),
-                'conditions' => $conditions,
-				'limit' => 100,		
-				'joins' => array (
-                    array(
-                        'alias' => 'RestaurantSpecialty',
-                        'table' => 'restaurants_specialties',
-						'type' => 'INNER',
-						'fields' => array('RestaurantSpecialty.restaurant_id'),
-                        'conditions' => array(
-							'RestaurantSpecialty.restaurant_id = Restaurant.id',
-							'RestaurantSpecialty.specialty_id' => $specialties
-                        ),
-					),
-	
-                ),
-			)
-			
-        );
 	}
 }

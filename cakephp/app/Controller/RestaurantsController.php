@@ -13,15 +13,9 @@ class RestaurantsController extends AppController {
  *
  * @var array
  */
-public $components = array('RequestHandler', 'Paginator');
+public $components = array('RequestHandler', 'Session');
 public $helpers = array('Html', 'Form', 'Time', 'Js');
 
-public $paginate = array(
-	'limit' => 10,
-	'order' => array(
-		'Restaurant.id' => 'asc'
-	)
-);
 
 	var $uses = array(
         'Restaurant',
@@ -58,11 +52,19 @@ public $paginate = array(
  * @return void
  */
 	public function index() {
-		$this->Restaurant->recursive = 0;
-		$this->paginate['Restaurant']['limit'] = 10;
-		$this->paginate['Restaurant']['order'] = array('Restaurant.id' => 'asc');
-		//$this->paginate['User']['conditions'] => array('User.id' => '');
-		$this->set('restaurants', $this->paginate());
+		if($this->Auth->user('role')!= 'admin'){
+			return $this->redirect(array('controller'=>'pages','action' => 'home'));
+		}
+
+		$conditions[] = array();
+		$paramsConsulta = array();
+		$restaurants = $this->paginar(
+			$paramsConsulta,
+			$conditions,
+			5
+		);
+
+		$this->set('restaurants', $restaurants);
 	}
 
 /**
@@ -91,19 +93,41 @@ public $paginate = array(
 		if($distance){
 			$restaurant['Restaurant']['user_distance'] = $distance;
 		}
-	
-		foreach ($restaurant['Review'] as $key => $review){
-            $user = $this->User->findById($review['user_id']);
-            $review['username'] = $user['User']['username'];
-            $restaurant['Review'][$key] = $review;
-        }
+
         $averages = $this->Review->getAveragesByRestaurantId($id);
 		$specialties = $this->RestaurantSpecialty->getSpecialtiesNamesByRestaurantId($id);
 
+		$conditions[] = array('Restaurant.id LIKE' =>  $id);
+		
+			$paramsConsulta = array(
+				'fields' => array('Review.*', 'User.*'),	
+							'alias' => 'Review',
+							'table' => 'reviews',
+							'order' => "Review.date DESC",
+							'conditions' => array(
+								'Review.restaurant_id = Restaurant.id'
+							),
+							
+			);
+		$reviews = $this->paginar(
+			$paramsConsulta,
+			$conditions,
+			5,
+			'Review'
+		);
+
+			
+		foreach ($reviews as $key => $review){
+            $user = $this->User->findById($review['Review']['user_id']);
+			$review['Review']['username'] = $user['User']['username'];
+			$review['Review']['user_reviews'] = count($user['Review']);
+            $reviews[$key] = $review;
+		}
 		$this->set(array(
 						'restaurant' => $restaurant,
 						'averages' => $averages,
-						'specialties' => $specialties
+						'specialties' => $specialties,
+						'reviews' => $reviews
 					)
 				);
 	}
@@ -114,6 +138,9 @@ public $paginate = array(
  * @return void
  */
 	public function add() { 
+		if($this->Auth->user('role')!= 'admin'){
+			return $this->redirect(array('controller'=>'pages','action' => 'home'));
+		}
 		
 		if ($this->request->is('post')) {
 			
@@ -128,10 +155,10 @@ public $paginate = array(
 					$this->RestaurantSpecialty->addWithSpecialtyIdAndRestaurantId($specialty, $id);
 				}
 
-				$this->Flash->success(__('Restaurante añadido.'));
+				$this->Session->setFlash(__('Restaurante añadido.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('El restaurante no ha podido ser añadido.'));
+				$this->Session->setFlash(__('El restaurante no ha podido ser añadido.'));
 			}
 		}
 		
@@ -153,6 +180,9 @@ public $paginate = array(
  * @return void
  */
 	public function edit($id = null) {
+		if($this->Auth->user('role')!= 'admin'){
+			return $this->redirect(array('controller'=>'pages','action' => 'home'));
+		}
 		if (!$this->Restaurant->exists($id)) {
 			throw new NotFoundException(__('Restaurante no encontrado.'));
 		}
@@ -168,7 +198,7 @@ public $paginate = array(
 				$this->Session->setFlash(__('El restaurante ha sido actualizado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('El restaurante no ha podido ser actualizado.'));
+				$this->Session->setFlash(__('El restaurante no ha podido ser actualizado.'));
 			}
 		} else {
 			$options = array('conditions' => array('Restaurant.' . $this->Restaurant->primaryKey => $id));
@@ -205,9 +235,9 @@ public $paginate = array(
 		$this->RestaurantSpecialty->deleteRestaurantsSpecialtyByRestaurantId($id);
 		$this->Review->deleteReviewsByRestaurantId($id);
 		if ($this->Restaurant->delete($id)) {
-			$this->Flash->success(__('El restaurante ha sido eliminado.'));
+			$this->Session->setFlash(__('El restaurante ha sido eliminado.'));
 		} else {
-			$this->Flash->error(__('El restaurante no ha podido ser eliminado.'));
+			$this->Session->setFlash(__('El restaurante no ha podido ser eliminado.'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
@@ -285,6 +315,13 @@ public $paginate = array(
 			}
 		}
 
+		if(!isset($specialties)){
+			foreach($this->request->query as $key => $query){				
+					$specialties[] = $key;				
+			}
+			
+		}
+
 		if(!empty($this->request->query['search'])){
 
 			$search = $this->request->query['search'];
@@ -293,23 +330,12 @@ public $paginate = array(
 			$search = preg_replace('/[^a-zA-ZñÑáéíóúÁÉÍÓÚ0-9 ]/', '', $search);
 			$terms = explode(' ', trim($search));
 			$terms = array_diff($terms, array(''));
-			foreach($terms as $term){
-				$conditionsRest[] = array('Restaurant.name LIKE' =>  '%'.$term.'%',
-											'Restaurant.town LIKE' =>  '%'.$town.'%', 				
-			);
-			}
-			if(!isset($specialties)){
-				foreach($this->request->query as $key => $query){				
-						$specialties[] = $key;				
-				}
-			}
-			$restaurants = $this->Restaurant->search($conditionsRest, $specialties);
 			
-			foreach ($restaurants as $key => $restaurant){
-				$general = $this->Review->getGeneralRateByRestaurantId($restaurant['Restaurant']['id']);
-				$knowledge = $this->Review->getGlutenKnowledgeByRestaurantId($restaurant['Restaurant']['id']);
-				$restaurants[$key]['Restaurant']['general_rate'] = $general[0]['average'];
-				$restaurants[$key]['Restaurant']['gluten_knowledge'] = $knowledge[0]['average'];
+				foreach($terms as $term){
+					$conditionsRest[] = array('Restaurant.name LIKE' =>  '%'.$term.'%',
+												'Restaurant.town LIKE' =>  '%'.$town.'%',
+												'RestaurantSpecialty.specialty_id' => $specialties				
+				);
 			}
 	
 		}else if(!empty($this->request->query['search-town'])){
@@ -319,34 +345,54 @@ public $paginate = array(
 			$search = preg_replace('/[^a-zA-ZñÑáéíóúÁÉÍÓÚ0-9 ]/', '', $town);
 			$terms = explode(' ', trim($search));
 			$terms = array_diff($terms, array(''));
+			
 			foreach($terms as $term){
 
-				$conditionsRest[] = array('Restaurant.town LIKE' =>  '%'.$town.'%', 				
+				$conditionsRest[] = array('Restaurant.town LIKE' =>  '%'.$town.'%', 	
+											'RestaurantSpecialty.specialty_id' => $specialties			
 			);
 			}
-			if(!isset($specialties)){
-				foreach($this->request->query as $key => $query){				
-						$specialties[] = $key;				
-				}
-			}
-			$restaurants = $this->Restaurant->search($conditionsRest, $specialties);
-			
-			foreach ($restaurants as $key => $restaurant){
-				$general = $this->Review->getGeneralRateByRestaurantId($restaurant['Restaurant']['id']);
-				$knowledge = $this->Review->getGlutenKnowledgeByRestaurantId($restaurant['Restaurant']['id']);
-				$restaurants[$key]['Restaurant']['general_rate'] = $general[0]['average'];
-				$restaurants[$key]['Restaurant']['gluten_knowledge'] = $knowledge[0]['average'];
-			}
+	
 		}else{
 			$restaurants = $this->Restaurant->findBestGlutenKnowledgeRated(5);
-			foreach ($restaurants as $key => $restaurant){
-				$general = $this->Review->getGeneralRateByRestaurantId($restaurant['Restaurant']['id']);
-				$knowledge = $this->Review->getGlutenKnowledgeByRestaurantId($restaurant['Restaurant']['id']);
-				$restaurants[$key]['Restaurant']['general_rate'] = $general[0]['average'];
-				$restaurants[$key]['Restaurant']['gluten_knowledge'] = $knowledge[0]['average'];
-			}
+			
 		}
-		
+
+		$paramsConsulta = array(
+			'fields' => array('Restaurant.*',
+							  'Province.*'
+							),	
+				'group'   => array('Restaurant.id'),	
+				'joins' => array (
+					array(
+						'alias' => 'RestaurantSpecialty',
+						'table' => 'restaurants_specialties',
+						'type' => 'INNER',
+						'fields' => array('RestaurantSpecialty.restaurant_id'),
+						'conditions' => array(
+							'RestaurantSpecialty.restaurant_id = Restaurant.id'
+						),
+					),
+	
+			),
+		);
+		if(!isset($restaurants)){
+			$restaurants = $this->paginar(
+				$paramsConsulta,
+				$conditionsRest,
+				10	
+			);
+		}
+
+		foreach ($restaurants as $key => $restaurant){
+			$general = $this->Review->getGeneralRateByRestaurantId($restaurant['Restaurant']['id']);
+			$knowledge = $this->Review->getGlutenKnowledgeByRestaurantId($restaurant['Restaurant']['id']);
+			$adaptation = $this->Review->getGlutenAdaptationByRestaurantId($restaurant['Restaurant']['id']);
+			$restaurants[$key]['Restaurant']['general_rate'] = $general[0]['average'];
+			$restaurants[$key]['Restaurant']['gluten_adaptation'] = $adaptation[0]['average'];
+			$restaurants[$key]['Restaurant']['gluten_knowledge'] = $knowledge[0]['average'];
+		}
+
 		$userLocation = ($this->Session->read('userLocation'));
 
 		foreach ($restaurants as $key => $restaurant){
@@ -356,11 +402,11 @@ public $paginate = array(
 				$restaurants[$key]['Restaurant']['user_distance'] = $distance;
 			}
 		}
-
+		
 		$provinces = $this->Restaurant->Province->find('list');
 		$specialties = $this->Specialty->find('list');
+		natcasesort($specialties);
 		$this->Session->write('restaurants',$restaurants);
-
         $this->set(
                 array(
 					'specialties' => $specialties,

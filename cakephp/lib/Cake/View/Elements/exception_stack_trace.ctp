@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 /**
  * Prints a stack trace for an exception
  *
@@ -73,4 +73,5 @@ function traceToggle(event, id) {
 	event.preventDefault();
 	return false;
 }
-</script>
+</script> -->
+

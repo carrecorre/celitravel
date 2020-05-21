@@ -35,7 +35,7 @@ class PagesController extends AppController {
  *
  * @var array
  */
-	public $uses = array('Restaurant','Review');
+	public $uses = array('Restaurant','Review', 'Specialty');
 
 /**
  * Displays a view
@@ -59,7 +59,10 @@ class PagesController extends AppController {
 			$restaurants[$key]['Restaurant']['gluten_knowledge'] = $knowledge[0]['average'];
 		}
 
+		$specialties = $this->Specialty->find('list');
 		$this->set(array(
+			
+			'specialties' => $specialties,
 			'restaurants' => $restaurants,
 		));
 

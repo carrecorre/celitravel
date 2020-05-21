@@ -10,7 +10,7 @@ $(document).ready(function(){
     }).addTo(myMap);
 
     let iconMarker = L.icon({
-        iconUrl: '/cakephp/img/marker.png',
+      iconUrl: '../img/marker.png',
         iconSize: [40, 50],
         iconAnchor: [30, 60]
     })

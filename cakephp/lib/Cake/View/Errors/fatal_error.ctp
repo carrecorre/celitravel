@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -36,4 +36,15 @@
 if (extension_loaded('xdebug')) {
 	xdebug_print_function_stack();
 }
-?>
+?> -->
+
+
+<div class ="error text-center">
+    <?php 
+        echo $this->Html->image(
+            '../img/logotipo.png'
+            ); 
+	?>
+	
+	<h3>¡Vaya! Parece que no tenemos lo que buscas, prueba en otro sitio.</h3>
+</php>
